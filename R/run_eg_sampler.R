@@ -253,9 +253,9 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
 
   #### saving the samples ####
     res <- collectSamples(zMat, notUpdate,niter + 1, prior_para$ltau)
-    res$grad <- grad
+   # res$grad <- grad
     res$imputed <- predictedY
-    res$acpt_rate <- acpt_ct / niter
+ #   res$acpt_rate <- acpt_ct / niter
 
   return(res)
 }
