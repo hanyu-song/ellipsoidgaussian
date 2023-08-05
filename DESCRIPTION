@@ -1,0 +1,27 @@
+Type: Package
+Package: ellipsoidgaussian
+Title: Fit an ellipsoid-Gaussian distribution
+Version: 1.0.0
+Author: Hanyu Song
+Maintainer: Hanyu Song <songhanyu1211@gmail.com>
+Description: An ellipsoid-Gaussian multivariate distribution is induced
+    when we use a Gaussian linear factor model, with the latent variables
+    having a von Mises-Fisher distribution on a unit hyper-sphere.
+License: MIT + file LICENSE
+Depends: R (>= 3.5.0)
+Imports: car, dplyr, expm, GIGrvg,
+        Matrix, MCMCpack, mice, narray, numDeriv, R.utils, ramcmc, Rcpp
+        (>= 1.0.11), reshape2, reticulate, rmutil, statmod,
+        Rfast, matrixcalc, mvtnorm, GGally, ggplot2, scales, Rdpack
+RdMacros: Rdpack
+Suggests: testthat (>= 3.0.0)
+LinkingTo: BH, Rcpp, RcppArmadillo, RcppEigen
+Config/reticulate: list( packages = list(list(package = "ctef") ) )
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+LazyData: true
+NeedsCompilation: yes
+Packaged: 2023-08-01 03:49:54 UTC; hanyusong
+
