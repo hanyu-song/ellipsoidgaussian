@@ -33,7 +33,7 @@
 #' @returns n samples from the ellipsoid-Gaussian distribution.
 #' @export
 #' @importFrom Rfast rvmf
-#' @importFrom mvtnorm rmvnorm
+#' @importFrom Rfast rmvnorm
 #' @examples
 #' dat <- rellipsoidgaussian(1000, rep(0,3), matrix(rnorm(6, mean = -5, sd = 2),nrow = 3, ncol = 2),
 #' c(0,1), 1, diag(0.5,3))
@@ -61,7 +61,8 @@ rellipsoidgaussian <- function(n, center, Lambda, mu, tau, Sigma) {
   p <- nrow(Lambda)
   Eta <- Rfast::rvmf(n, mu,tau)
   X <- matrix(NA, nrow = n, ncol = p)
-  noise <- mvtnorm::rmvnorm(n, mean = rep(0,p), sigma = Sigma)
+  #noise <- mvtnorm::rmvnorm(n, mean = rep(0,p), sigma = Sigma)
+  noise <- Rfast::rmvnorm(n, mu = rep(0,p), sigma = Sigma)
   for (i in seq_len(n)) {
     X[i,] <- center + Lambda %*% Eta[i,] + noise[i,]
   }
@@ -125,7 +126,7 @@ dellipsoidgaussian_up2const_logged <- function(dat, Sigma, lambda, tau, mu, cent
   centered_dat_sq <- centered_dat^2
   expon_part <- -0.5 * sum(sweep(centered_dat_sq, 2, Sigma, FUN = '/'))
   # Fisher-Bingham  "constant" term
-  lambinvSig = sweep(t(lambda),MARGIN = 2, STATS = Sigma, FUN = '/') # equivalent to  t(lambda) %*% diag(invSigma)
+  lambinvSig <- sweep(t(lambda),MARGIN = 2, STATS = Sigma, FUN = '/') # equivalent to  t(lambda) %*% diag(invSigma)
   para12 <- lambinvSig %*% t(centered_dat)
   para1 <- sweep(para12, 1, tau * mu, FUN = '+')
   para2 <- lambinvSig %*% lambda / 2

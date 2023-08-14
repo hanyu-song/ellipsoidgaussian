@@ -33,7 +33,7 @@ the total number of iterations.
 \description{
 \code{gSGNHT_EG} draws from the posterior distribution associated with an ellipsoid-Gaussian
 likelihood using geodesic Stochastic Gradient Nose-Hoover Thermostats (gSGNHT)
-\insertCite{liu16sgMCMC}{ellipsoidgaussian}.
+\insertCite{liu16sgmcmc}{ellipsoidgaussian}.
 }
 \examples{
  parList <- gen_input_eg(shell,k = 3, updateCenter = TRUE)

@@ -86,5 +86,5 @@ Results are generally not sensitive to the choice of the prior parameters.
 gen_input_eg(shell, k = 3, TRUE)
 }
 \references{
-\insertRef{melikechi2023ellipsoid}{ellipsoidgaussian}
+\insertAllCited{}
 }

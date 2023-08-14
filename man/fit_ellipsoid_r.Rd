@@ -21,3 +21,6 @@ using Cayley transform ellipsoid fitting (CTEF)  \insertCite{melikechi2023ellips
 \examples{
 fit_ellipsoid_r(shell, 3)
 }
+\references{
+\insertAllCited{}
+}

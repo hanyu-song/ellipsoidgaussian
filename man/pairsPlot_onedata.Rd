@@ -4,16 +4,10 @@
 \alias{pairsPlot_onedata}
 \title{ggplot2 pairs plot with correlation information}
 \usage{
-pairsPlot_onedata(dat_new, dir = NULL, name, rotate_x_text = F)
+pairsPlot_onedata(dat_new, rotate_x_text = FALSE)
 }
 \arguments{
 \item{dat_new}{A matrix of data.}
-
-\item{dir}{String, the path to where the plot should be saved. Default is NULL, meaning
-the plot is not saved.}
-
-\item{name}{String, the name of the plot to be saved. When \code{dir} is NULL, meaning
-the plot will not be saved, the name can be left blank.}
 
 \item{rotate_x_text}{Logical, whether to rotate the texts on the x-axis or not.
 If so, they are positioned at a 60-degree angle.}
@@ -32,5 +26,8 @@ the plot at location \code{dir} with name \code{name}.
 x-axis in case of space constraint.
 }
 \examples{
-pairsPlot_onedata(shell, NULL)
+if (require('GGally') && require('ggplot2')  &&
+require('scales')) {
+  pairsPlot_onedata(shell)
+  }
 }

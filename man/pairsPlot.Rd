@@ -4,19 +4,13 @@
 \alias{pairsPlot}
 \title{ggplot2 pairs plot with two data sets in juxtaposition}
 \usage{
-pairsPlot(dat_orig, dat_new, dir, name)
+pairsPlot(dat_orig, dat_new)
 }
 \arguments{
+\item{dat_orig}{A matrix of data, e.g. the original data set.}
+
 \item{dat_new}{A matrix of data, e.g. the data generated from the posterior
 predictive distribution.}
-
-\item{dir}{String, the path to where the plot should be saved. Default is NULL, meaning
-the plot is not saved.}
-
-\item{name}{String, the name of the plot to be saved. When \code{dir} is NULL, meaning
-the plot will not be saved, the name can be left blank.}
-
-\item{data_orig}{A matrix of data, e.g. the original data set.}
 }
 \value{
 ggmatrix object from GGally, a matrix of plots
@@ -32,5 +26,8 @@ the plot at location \code{dir} with name \code{name}.
 }
 \examples{
 dat_new <- gen_posterior_predictive(1000, samples, 2500)
-pairsPlot(shell, dat_new, NULL)
+if (require('GGally') && require('ggplot2') && require('dplyr') &&
+require('scales')) {
+ pairsPlot(shell, dat_new)
+  }
 }

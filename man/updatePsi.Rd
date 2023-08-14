@@ -6,6 +6,16 @@
 \usage{
 updatePsi(kappa1, phi1, lambda1)
 }
+\arguments{
+\item{kappa1}{The kappa parameter in the Dirichlet-Laplace prior of Lambda.}
+
+\item{phi1}{The phi parameter in the Dirichlet-Laplace prior of Lambda.}
+
+\item{lambda1}{A matrix of p by k, the factor loading matrix.}
+}
+\value{
+Updated Psi parameter
+}
 \description{
-Update Psi, a parameter in the hyperprior of Lambda
+\code{updatePsi} updates the psi used in the Dirichlet-Laplace prior of Lambda.
 }

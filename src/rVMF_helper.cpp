@@ -1,5 +1,14 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+
+
+//' The rotation from a to b.
+//'
+//' @description
+//' `rotate_cpp` finds the rotation matrix that transforms a to b.
+//'
+//' @param a A vector of length n.
+//' @param b A vector of length n.
 //[[Rcpp::export]]
 arma::mat rotate_cpp(const arma::vec &a, const arma::vec& b) {
   //int p = size(a);

@@ -2,8 +2,7 @@
 #'
 #' @description
 #' `ellipsoid_gaussian` fits an ellipsoid-Gaussian distribution (or a von-Mises Fisher linear factor model)
-#' to the data using geodesic Stochastic Gradient Nose-Hoover Thermostats (gSGNHT)
-#'  \insertCite{liu16sgMCMC}{ellipsoidgaussian}.
+#' to the data using geodesic Stochastic Gradient Nose-Hoover Thermostats (gSGNHT) \insertCite{liu16sgmcmc}{ellipsoidgaussian}.
 #'
 #' @details
 #' The von-Mises Fisher linear factor model is defined by
@@ -34,7 +33,7 @@
 #' @returns All the samples, including the pre and post burn-in ones.
 #'
 #' @references
-#' \insertRef{liu16sgMCMC}{ellipsoidgaussian}
+#' \insertAllCited{}
 #'
 #' @export
 #' @importFrom Rdpack reprompt

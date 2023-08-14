@@ -25,6 +25,7 @@
 #' @returns A matrix of data, samples from the posterior predictive distribution
 #' @export
 #' @importFrom Rfast rvmf
+#' @importFrom stats rnorm
 #' @examples
 #' gen_posterior_predictive(1000, samples, 2500)
 gen_posterior_predictive <- function(n,samples,burnin,include_noise = TRUE) {
@@ -53,7 +54,7 @@ gen_posterior_predictive <- function(n,samples,burnin,include_noise = TRUE) {
 
 
     if (include_noise) {
-      noise <- rnorm(length(cov_), mean = 0, sd = sqrt(cov_))
+      noise <- stats::rnorm(length(cov_), mean = 0, sd = sqrt(cov_))
       # noise <- rep(0,length = nrow(samples$lambdas[,,1]))
       dat[i,] <- c(Lambda %*% t(latFac)) +  noise + center
       # dat[i,] <- sweep(latFac %*% t(Lambda) + noise ,2,center, '+')

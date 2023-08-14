@@ -6,6 +6,15 @@
 \usage{
 updatePhi(a, lambda1)
 }
+\arguments{
+\item{a}{The parameter in the Dirichlet-Laplace prior for Lambda,
+typically set at 0.5}
+
+\item{lambda1}{A matrix of p by k, the factor loading matrix}
+}
+\value{
+updated Phi parameter
+}
 \description{
-Update Phi, a parameter in the hyperprior of Lambda
+\code{updatePhi} updates Phi in the Dirichlet-Laplace prior of Lambda.
 }

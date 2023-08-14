@@ -6,6 +6,16 @@
 \usage{
 updateKap(a, phi1, lambda1)
 }
+\arguments{
+\item{a}{The parameter in the Dirichlet-Laplace prior for Lambda.}
+
+\item{phi1}{The parameter phi in the Dirichlet-Laplace prior.}
+
+\item{lambda1}{A matrix of p by k, the factor loading matrix.}
+}
+\value{
+Updated Kap parameter
+}
 \description{
-Update Kap, a parameter in the hyperprior of Lambda
+\code{updateKap} updates the kappa parameter in the Dirichlet-Laplace prior of Lambda.
 }

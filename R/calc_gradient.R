@@ -1,8 +1,28 @@
+#' Computes stochastic gradient
+#'
+#' @description
+#' `calcSGgrad` computes the stochastic gradient for \code{dat} at parameter
+#'  values \code{theta1}.
+#'
+#' @param theta1 A list of parameter values at which gradient is evaluated.
+#' @param dat The minibatch, a numeric matrix of n by p
+#' @param k The latent dimension.
+#' @param prior_para A list of prior parameters.
+#' @param accurate_grad Logical, whether to evaluate the accurate gradient.
+#' @param minibatchSize Minibatch size.
+#' @param initialization_period Logical, whether it is the initialization period.
+#' @param prior_exclude Logical, whether to ignore the priors in evaluating
+#' the gradient.
+#'
 #' @importFrom numDeriv grad
-calcSGgrad <- function(theta1, dat, k, prior_para,
+calcSGgrad <- function(theta1,
+                       dat,
+                       k,
+                       prior_para,
                        accurate_grad,
-                       minibatchSize, initialization_period,
-                       prior_exclude, print_status) {
+                       minibatchSize,
+                       initialization_period,
+                       prior_exclude) {
 # add two input par - initialization_period - percentage
   # initialization_period: index of points to be replicated
   n <- nrow(dat);p <- ncol(dat)
@@ -85,65 +105,45 @@ calcSGgrad <- function(theta1, dat, k, prior_para,
 
 
 
-calcSGgrad_adaptiveLangevin <- function(theta1, dat, k, prior_para,
-                       accurate_grad,
-                       minibatchSize = 500,
-                       prior_exclude) {
-  n <- nrow(dat); p <- ncol(dat)
-  # stopifnot(minibatchSize <= n)
-  if(minibatchSize < n) {
-    idx <- sample(1:n, minibatchSize)
-    sdat <- dat[idx,, drop = F]
-  }
-  else {
-    sdat <- dat
-  }
-  ltau_ <- ifelse(prior_para$ltau$update,'non','ltau')
-  par_names <- setdiff(names(prior_para), ltau_)
- # par_names <- names(prior_para)
 
-  grad_sum  <- calcllhgrad(par_names, theta1, sdat[1, ,drop = F], k,
-                         prior_para$ltau[c('lowerB','upperB','fac')],accurate_grad)
-  grad_2mom <- lapply(grad_sum, function(x) x^2)
-  #oneGradMat <- matrix(NA, nrow = minibatchSize, ncol = length(oneGrad))
-  #oneGradMat[1,] <- oneGrad
-  if (minibatchSize > 1) {
-  for (i in 2:minibatchSize) {
-    temp <- calcllhgrad(par_names, theta1, sdat[i, ,drop = F], k,
-                                  prior_para$ltau[c('lowerB','upperB','fac')], accurate_grad)
-    grad_sum <- Map('+',grad_sum,temp)
-    temp2 <- lapply(grad_sum, function(x) x^2)
-    grad_2mom <- Map('+', grad_2mom, temp2)
-  }
-  }
-  avgGrad <- lapply(grad_sum, function(x) x/minibatchSize)
-  dUtilde <- lapply(avgGrad, function(x) -n * x)
- # gradCov <- calcGradCov(oneGradMat, avgGrad)
-  gradCov <- calcGradCov2(grad_2mom, avgGrad, minibatchSize)
-  if (!prior_exclude) {
-    prior_grad <- calcpriorgrad(theta1, p, k,prior_para[par_names])
-    temp <- intersect(names(dUtilde),names(prior_grad))
-    dUtilde <- Map('-',dUtilde[temp], prior_grad[temp] )
-  }
-  res <- list(grad = dUtilde, gradCov = gradCov) # CHANGE
-  return(res)
-}
-calcGradCov2 <- function(grad_2mom, avgGrad, nentry) {
+#calcGradCov2 <- function(grad_2mom, avgGrad, nentry) {
   # grad_2mom: a list
   # avgGrad: a list of the same shape as grad_2mom
   # nentry: minibatchsize
-  mapply(function(X, Y) {X / (nentry - 1) - nentry / (nentry - 1) * Y^2},
-         X = grad_2mom, Y = avgGrad)
-}
+ # mapply(function(X, Y) {X / (nentry - 1) - nentry / (nentry - 1) * Y^2},
+   #      X = grad_2mom, Y = avgGrad)
+#}
 
 
 
-
+#' Gradient change due to log transformation
+#'
+#' @description
+#' `logTransGradAdjust` computes the derivative w.r.t log(\code{var}) given
+#'  the derivative w.r.t \code{var}.
+#'
+#' @param var Variable before taking the logarithm.
+#' @param orig_deri The derivative w.r.t the variable.
+#' @param lowerB The lower bound of the variable \code{var}.
+#'
+#' @returns Derivative w.r.t log(\code{var}).
 logTransGradAdjust <- function(var, orig_deri, lowerB = 0) {
   # var: var before logged (has to be positive)
   res <- (var - lowerB) * orig_deri
   return(res)
 }
+
+#' Calculate derivative for tau
+#'
+#' @description
+#' `dtau_dlogit` computes the derivative of tau w.r.t
+#' logit((tau - lowerB) / (upperB - lowerB)).
+#'
+#' @param ltau The parameter that is being updated in gSGNHT, namely
+#' logit((tau - lowerB) / (upperB - lowerB)).
+#' @param lowerB Lower bound of tau
+#' @param upperB Upper bound of tau
+#'
 dtau_dlogit <- function(ltau, lowerB, upperB) {
   # p = (tau - lowerB) / (UpperB - lowerB)
   # logit(p) = target var
@@ -151,6 +151,16 @@ dtau_dlogit <- function(ltau, lowerB, upperB) {
 #  res <- (tau - lowerB) * (upperB - tau) / (upperB - lowerB)
   return(res)
 }
+
+
+#' Calculate derivative
+#'
+#' @description
+#' `dlogDtauDlogit_dlogit` calculates log(DtauDlogit) w.r.t the
+#' logit function.
+#'
+#' @param logit_val The transformed tau gSGNHT is updating.
+#'
 dlogDtauDlogit_dlogit <- function(logit_val) {
   #logit_val: the transformed tau we are updating
 #  logit_val - 2*log(1 + exp(logit_val))
@@ -158,6 +168,17 @@ dlogDtauDlogit_dlogit <- function(logit_val) {
   res <- (1 - exp_) /(1 + exp_)
   return(res)
 }
+
+#' Prior gradient
+#'
+#' @description
+#' `calcpriorgrad` computes the prior gradient w.r.t the parameters in \code{theta1}.
+#'
+#' @param theta1 A list of the parameter values, ordere by their names
+#' @param p The ambient dimension
+#' @param k The latent dimension
+#' @param prior_para A list of the prior parameters
+#'
 calcpriorgrad <- function(theta1, p, k, prior_para) {
   # para_idx: a list, each element has the name of the parameter,
   # and the content is the para index
@@ -249,6 +270,20 @@ calcpriorgrad <- function(theta1, p, k, prior_para) {
 }
 
 
+#' Truncated normal gradient
+#'
+#' @description
+#' `calcHalfNormalPriorGrad` calculates the gradient w.r.t. \eqn{\log(1 / \sigma^2)},
+#' with \eqn{\sigma^2} following a prior distribution N(\code{mean}, \code{asig}\eqn{^2}).
+#'
+#' @param linvSigma A vector of length p, \eqn{\log(1 / \sigma_j^2), j = 1, \ldots,p}.
+#' @param logInv Logical, if logInv, compute the gradient w.r.t. \eqn{\log(1 / \text{var})};
+#' else, compute the gradient w.r.t. \eqn{\log(\text{var})}, where \eqn{\text{var}}
+#' follows a truncated normal prior in both cases.
+#' @param asig The standard deviation parameter in the normal distribution.
+#' @param mean The mean parameter in the normal distribution.
+#'
+#' @returns A vector of gradient
 calcHalfNormalPriorGrad <- function(linvSigma, logInv, asig, mean = 0) {
   #calcHalfNormalPriorGrad is gradien w.r.t linvSigma, where sigma^2 \sim halfnormal(mean, asig^2)
   # warning: have not verified
@@ -270,7 +305,21 @@ calcHalfNormalPriorGrad <- function(linvSigma, logInv, asig, mean = 0) {
 }
 
 
-
+#' Derivative w.r.t. the function of interest of tau
+#'
+#' @description
+#' `calcgradTau_truncatedNormal_prior` calculates derivative w.r.t the function of tau,
+#' that is actually being updated in the sampler, with tau following a truncated
+#' normal prior \eqn{\text{N}(\text{mean}, \text{sd}^2)\mathbm{1}(l,u).}
+#'
+#' @details
+#' The parameter that is being updated in the sampler is
+#' \eqn{\text{logit}\{(\tau - l)/(u - l)\}.}
+#'
+#' @param ltau The parameter that is being updated in the sampling procedure.
+#' @param prior_par A list of prior parameters, ordered by names \code{lowerB},
+#' \code{upperB}, \code{cvmf} (mean), \code{dvmf} (sd).
+#'
 calcgradTau_truncatedNormal_prior <- function(ltau, prior_par) {
   # dvmf: standard deviation
   # cvmf: mean of the normal
@@ -282,6 +331,15 @@ calcgradTau_truncatedNormal_prior <- function(ltau, prior_par) {
   return(ans)
 }
 
+#' Derivative of Laplace prior
+#'
+#' @description
+#' `calcloglaplaceDeri` calculates the derivative w.r.t. \code{var}.
+#'
+#' @param var The variable.
+#' @param scale Scale of the distribution.
+#' @param mean Mean of the distribution.
+#'
 calcloglaplaceDeri <- function(var, scale, mean = 0) {
   res <- 1 / scale
   if (var > mean) {
@@ -291,6 +349,19 @@ calcloglaplaceDeri <- function(var, scale, mean = 0) {
 }
 
 
+#' Gradient of the log-likelihood
+#'
+#' @description
+#' `calcllhgrad` calculates gradient of log-likelihood w.r.t. the parameters in
+#' \code{par_names}.
+#'
+#' @param par_names A list of parameters to be updated
+#' @param theta1 A list of parameter values
+#' @param sdat The minibatch data.
+#' @param k The latent dimension.
+#' @param tauBounds A list of tau information, lowerB, upperB and fac.
+#' @param accurate_grad Logical, whether accurate or simple gradient is desired.
+#'
 calcllhgrad <- function(par_names, theta1, sdat, k, tauBounds, accurate_grad) {
   # par_names: a list of parameters to be updated
   # center_prior_var: vector of variances
@@ -394,6 +465,17 @@ calcllhgrad <- function(par_names, theta1, sdat, k, tauBounds, accurate_grad) {
 
 
 
+#' Wrapper of [calcGrad_llh_fast()]
+#'
+#' @description
+#' `calcGrad_llh_fast_wrapper` is wrapper to [calcGrad_llh_fast()].
+#'
+#' @param par_names Parameter names.
+#' @param theta1 The parameter values.
+#' @param sdat The minibatch.
+#' @param tauBounds A list of bounds for tau, lowerB and upperB.
+#' @param accurate_grad Logical, whether accurate gradient is desired.
+#'
 calcGrad_llh_fast_wrapper <- function(par_names,theta1, sdat, tauBounds, accurate_grad) {
   #paras <- separateParas(para_idx, theta1, sdat, tauBounds)
 #  res <- calcGrad_llh_fast(par_names, exp(paras$linvSig, paras$lambda, paras$tau, paras$mu, paras$centered_dat, tauBounds, accurate_grad)
@@ -440,7 +522,20 @@ calcGrad_llh_fast_wrapper <- function(par_names,theta1, sdat, tauBounds, accurat
 
 
 
-
+#' Approximate derivative w.r.t.
+#' \eqn{\text{logit}\{(\tau - \text{lowerB}) / (\text{upperB} - \text{lowerB})\}.}
+#'
+#' @description
+#' `approxDeriTransformedTau` approximates the derivative of [calclogC_up2const()]
+#' w.r.t.  \eqn{\text{logit}\{(\tau - \text{lowerB}) / (\text{upperB} - \text{lowerB})\}.}
+#'
+#' @param transformedPara \eqn{\text{logit}\{(\tau - \text{lowerB}) / (\text{upperB} - \text{lowerB})\}}.
+#' @param lowerB The lower bound of tau.
+#' @param upperB The upper bound of tau.
+#' @param minibatchSize The minibatch size.
+#' @param k The latent dimension.
+#' @param fac Default is 1.
+#'
 approxDeriTransformedTau <- function(transformedPara, lowerB, upperB, minibatchSize, k, fac) {
   # tau has truncated gamma distribution
   # p = (tau - lowerB) / (upperB - lowerB);
@@ -454,6 +549,15 @@ approxDeriTransformedTau <- function(transformedPara, lowerB, upperB, minibatchS
   return(res)
 
 }
+#' Approximate derivative w.r.t. \eqn{\log(\tau)}
+#'
+#' @description
+#' `approxDeriltau` calculates derivative w.r.t. \eqn{\log(\tau)}.
+#'
+#' @param ltau \eqn{\log(\tau)}.
+#' @param minibatchSize Minibatch size.
+#' @param k The latent dimension.
+#'
 approxDeriltau <- function(ltau, minibatchSize,k) {
   # the current version does not allow for using a lowerB
   # check old code for the older version
@@ -464,6 +568,16 @@ approxDeriltau <- function(ltau, minibatchSize,k) {
   return(res)
 }
 
+#' Calculate derivative w.r.t \eqn{\log(1 / \sigma^2)}
+#'
+#' @description
+#' `calcDerilinvSig` calculates the derivative w.r.t. \eqn{\log(1 / \sigma^2)},
+#' where \eqn{\sigma^2} follows a normal prior.
+#'
+#' @param invSig1 The precision.
+#' @param centered_sdat Centered minibatch, a numeric matrix.
+#'
+#' @returns A vector, gradient w.r.t \eqn{\log(1 / \sigma^2)}.
 calcDerilinvSig <- function(invSig1, centered_sdat) { # correct!
   minibatchSize <- nrow(centered_sdat)
   term1 <- 0.5 / invSig1 * minibatchSize
@@ -475,6 +589,13 @@ calcDerilinvSig <- function(invSig1, centered_sdat) { # correct!
   return(res)
 }
 
+#' Calculate derivative for parameters with a normal prior
+#'
+#' @description
+#' `calcDericenter` calculates derivative w.r.t parameters (e.g. center and )
+#'
+#' @param invSig1 The inverse of noise variances, precision.
+#' @param centered_sdat Centered minibatch, a numeric matrix.
 calcDericenter <- function(invSig1, centered_sdat) { # correct!
   # (x - c)^T diag(invSig)
   temp <- sweep(centered_sdat, 2, invSig1, FUN = '*') # n by p

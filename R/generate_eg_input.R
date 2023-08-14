@@ -60,13 +60,13 @@
 #' @importFrom mice complete
 #'
 #' @references
-#'  \insertRef{melikechi2023ellipsoid}{ellipsoidgaussian}
+#'  \insertAllCited{}
 #'
 #' @examples
 #' gen_input_eg(shell, k = 3, TRUE)
 gen_input_eg <- function(dat,k, updateCenter, minibatchSize = NULL,
-                          epsilon1 =1e-4 , scalar_para = 0.1,
-                          noise_sd = 3, tau_sd = 0.1, cen_sd = 1) {
+                         epsilon1 =1e-4 , scalar_para = 0.1,
+                         noise_sd = 3, tau_sd = 0.1, cen_sd = 1) {
   # lambda_prior: parameter in dirichlet lapalce prior; if null, use uniform prior on the stiefel manifold
   # good default choice for epsilon1: 5 * 1e-4
   # 1e-5 * 5 for air quality data with missing
@@ -99,7 +99,7 @@ gen_input_eg <- function(dat,k, updateCenter, minibatchSize = NULL,
   # Lambda. Therefore, Lambda_prior is NOT in use.
   parList <- list(init = init, k = k,
                   prior_par = list(lambda_prior = 0.5, noise_sd = noise_sd,
-                                 tau_sd = tau_sd,
+                                   tau_sd = tau_sd,
                                    cen_sd = cen_sd, # experimental: omar-fix center
                                    tau_lowerB = init$tau / 1.5,
                                    #   tau_lowerB = max(min(findTauBound(k, 'min'),init$tau / 1.5 ),0),
@@ -117,7 +117,19 @@ gen_input_eg <- function(dat,k, updateCenter, minibatchSize = NULL,
 
   return(parList)
 }
-preprocess_Lambda_omar <- function(Lambda, ax_lengths) {
+#' Process Lambda
+#'
+#'@description
+#'`preprocess_Lambda_ctef` processes the factor loading matrix and
+#'the axes length output from [init_CTEF()] such that the order of the
+#'axes lengths match that of the singular values of the factor loading matrix.
+#'
+#'@param Lambda The factor loading matrix output from CTEF.
+#'@param ax_lengths The axes lengths output from CTEF.
+#'
+#'@returns A list of axes lengths and directions.
+#'
+preprocess_Lambda_ctef <- function(Lambda, ax_lengths) {
   # both Lambda and ax_lengths are output from ellipsoid_fit_R
   SVD <- svd(Lambda)
   k <- ncol(SVD$u)
@@ -140,12 +152,25 @@ preprocess_Lambda_omar <- function(Lambda, ax_lengths) {
   return(list(sph_r = newD, axesDir = newU))
 }
 
+#' Produce initial values to the sampler
+#'
+#' @description
+#' `init_CTEF` provides initial values to the sampler using CTEF.
+#'
+#' @param dat A numeric matrix of data, N by p.
+#' @param noise_var A vector of estimates of the noise variances, length = p.
+#' @param k The latent dimension.
+#' @param ordered Logical, whether to order the axes lengths in a monotonically
+#' increasing manner. Typically we set it to be false.
+#'
+#' @returns A list of the initial values, ordered by parameter names.
+#'
 init_CTEF <- function(dat,noise_var,k,ordered) {
   params <- fit_ellipsoid_r(dat, as.integer(k))
 
   res <- list(center = params$center, mu = params$mu,
               noise_prec = base::rep(10, length(params$center)), tau = params$tau)
-  temp <- preprocess_Lambda_omar(params$Lambda, params$ax_lengths)
+  temp <- preprocess_Lambda_ctef(params$Lambda, params$ax_lengths)
   res$axesDir <- temp$axesDir
   res$sph_r <- temp$sph_r
   if (ordered) {
@@ -172,6 +197,7 @@ init_CTEF <- function(dat,noise_var,k,ordered) {
 
 #' @returns The parameters of the fitted ellipsoid.
 #' @export
+#' @references \insertAllCited{}
 #' @examples
 #' fit_ellipsoid_r(shell, 3)
 fit_ellipsoid_r <- function(X, k) {
@@ -199,5 +225,4 @@ fit_ellipsoid_r <- function(X, k) {
 # res <- ellipsoid_fit(as.matrix(X), as.integer(k))
 # return(res)
 #}
-
 

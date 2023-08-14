@@ -19,6 +19,20 @@ private:
   double _eps;
 };
 
+
+//' Helper function for evaluating the pseudo-normalising constant
+//'
+//' @description
+//' `kfb_cpp` is a helper function for evaluating the pseudo-normalising constant.
+//' See \insertCite{KumeWood05}{ellipsoidgaussian} for more details.
+//'
+//' @references \insertAllCited{}
+//'
+//' @param j The power
+//' @param gam Gamma.
+//' @param lam Lambda.
+//' @param ta t.
+//'
 //[[Rcpp::export]]
 double kfb_cpp(const unsigned& j, const arma::vec& gam, const arma::vec& lam, double ta) {
   double kd;
@@ -36,6 +50,17 @@ double kfb_cpp(const unsigned& j, const arma::vec& gam, const arma::vec& lam, do
 }
 
 
+//' Find saddle point
+//' @description
+//' `saddle_equat_cpp` is a helper function for evaluating the pseudo-normalising constant.
+//' See \insertCite{KumeWood05}{ellipsoidgaussian} for more details.
+//'
+//' @references \insertAllCited{}
+//'
+//' @param ta t.
+//' @param gam Gamma.
+//' @param lam Lambda.
+//'
 //[[Rcpp::export]]
 double saddle_equat_cpp(const double& ta, const arma::vec& gam,const arma::vec& lam) {
   arma::uword len = gam.n_elem;
@@ -54,8 +79,14 @@ double saddle_equat_cpp(const double& ta, const arma::vec& gam,const arma::vec& 
   return(res);
 }
 
-
-
+//' Reorder vector
+//'
+//' @description
+//' `reorder_vec` orders vector \code{v} based on the order \code{idx}.
+//'
+//' @param v A vector.
+//' @param idx A vector of indices.
+//'
 //[[Rcpp::export]]
 arma::vec reorder_vec(const arma::vec &v, const arma::uvec &idx) {
   arma::uword len = v.n_elem;
@@ -66,6 +97,16 @@ arma::vec reorder_vec(const arma::vec &v, const arma::uvec &idx) {
   return(res);
 }
 
+//' Find the root to the saddle point equation.
+//'
+//' @description
+//' `root4SaddleEquat` finds the root to the saddlepoint equation
+//'
+//' @param gam A vector of length n.
+//' @param lam A vector of length n.
+//' @param low The lower bound of the solution.
+//' @param up The upper bound of the solution.
+//'
 //[[Rcpp::export]]
 double root4SaddleEquat(const arma::vec& gam, const arma::vec& lam,
                         double low, double up) {
@@ -87,6 +128,19 @@ double root4SaddleEquat(const arma::vec& gam, const arma::vec& lam,
   return(res);
 }
 
+
+//' Fisher-Bingham normalising constant
+//'
+//' @description
+//' `findFBconst_cpp` calculates the normalising constant in the Fisher-Bingham
+//' distribution.
+//'
+//' @param gam A vector
+//' @param lam A vector
+//' @param which_ The order of approximation. 1: First order; 2: second order first
+//' type; 3: second order second type.
+//' @param ordered Whether gam or lam is ordered.
+//'
 //[[Rcpp::export]]
 double findFBconst_cpp(arma::vec& gam, arma::vec& lam, const arma::uword& which_, const bool& ordered) {
   double res;
@@ -129,6 +183,21 @@ double findFBconst_cpp(arma::vec& gam, arma::vec& lam, const arma::uword& which_
   //arma::vec logcon = {c1, c2, c3};
   return(res);
 }
+
+
+
+//' Fisher-Bingham normalising constant
+//'
+//' @description
+//' `approxFBconst_cpp` approximates the normalising constant in the Fisher-Bingham
+//' distribution using saddlepoint approximation \insertCite{KumeWood05}{ellipsoidgaussian}.
+//'
+//' @param para1 The vector parameter, length is k.
+//' @param para2 The matrix parameter, k by k.
+//' @param idx_ The order of approximation,1: First order; 2: second order first
+//' type; 3: second order second type.
+//'
+//' @references \insertAllCited{}
 //[[Rcpp::export]]
 arma::vec approxFBconst_cpp(const arma::mat& para1, const arma::mat& para2,
                      const arma::uword& idx_) {
@@ -148,7 +217,16 @@ arma::vec approxFBconst_cpp(const arma::mat& para1, const arma::mat& para2,
   return(res);
 }
 
-
+//' Convert a vech format to a matrix
+//'
+//' @description
+//' `Vech2Mat_cpp` converts a single vector of length \eqn{d(d+1)/2} obtained
+//' through the vech (vector half) operation to its original matrix format. The vech
+//' (vector half) operator takes a symmetric \eqn{d \times d} matrix and
+//' stacks the lower triangular half into a single vector of length \eqn{d(d+1)/2}.
+//'
+//' @param para2_vech A vector obtained through vech operation.
+//'
 //[[Rcpp::export]]
 arma::mat Vech2Mat_cpp(const arma::vec& para2_vech) {
   arma::uword n = (-1 + sqrt(1 + 8 * para2_vech.n_elem)) / 2;
@@ -174,6 +252,18 @@ arma::mat Vech2Mat_cpp(const arma::vec& para2_vech) {
   V = arma::symmatl(V);
   return(V);
 }
+
+
+//' Gradient w.r.t. the matrix parameter in the pseudo-normalising constant
+//'
+//' @description
+//' `calclogPseudoconst_MatParGrad4_cpp` calculates the gradient of the logarithm
+//' of the pseudo-normalising constant w.r.t. the matrix parameter.
+//'
+//' @param para2_vech A vector obtained through vech operation from the matrix
+//' parameter.
+//' @param para1 A vector, the vector parameter in the pseudo-normalising constant.
+//'
 //[[Rcpp::export]]
 double calclogPseudoconst_MatParGrad4_cpp(const arma::vec& para2_vech, const arma::mat& para1) {
   // para1: k by n;
