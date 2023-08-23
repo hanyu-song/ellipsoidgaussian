@@ -36,7 +36,9 @@ likelihood using geodesic Stochastic Gradient Nose-Hoover Thermostats (gSGNHT)
 \insertCite{liu16sgmcmc}{ellipsoidgaussian}.
 }
 \examples{
+  if (reticulate::py_module_available('ctef')) {
  parList <- gen_input_eg(shell,k = 3, updateCenter = TRUE)
  res <- gSGNHT_EG(shell, parList$k, parList$init, parList$prior_par,
                  parList$alg_par, 100, parList$updateCenter)
+                 }
 }

@@ -63,7 +63,9 @@
 #'  \insertAllCited{}
 #'
 #' @examples
-#' gen_input_eg(shell, k = 3, TRUE)
+#' if (reticulate::py_module_available('ctef')) {
+#'   gen_input_eg(shell, k = 3, TRUE)
+#' }
 gen_input_eg <- function(dat,k, updateCenter, minibatchSize = NULL,
                          epsilon1 =1e-4 , scalar_para = 0.1,
                          noise_sd = 3, tau_sd = 0.1, cen_sd = 1) {
@@ -199,7 +201,9 @@ init_CTEF <- function(dat,noise_var,k,ordered) {
 #' @export
 #' @references \insertAllCited{}
 #' @examples
+#'  if (reticulate::py_module_available('ctef')) {
 #' fit_ellipsoid_r(shell, 3)
+#' }
 fit_ellipsoid_r <- function(X, k) {
   # X: data (matrix)
   # k: projection to what dimension of space?

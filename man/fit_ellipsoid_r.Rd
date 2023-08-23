@@ -19,7 +19,9 @@ The parameters of the fitted ellipsoid.
 using Cayley transform ellipsoid fitting (CTEF)  \insertCite{melikechi2023ellipsoid}{ellipsoidgaussian}.
 }
 \examples{
+ if (reticulate::py_module_available('ctef')) {
 fit_ellipsoid_r(shell, 3)
+}
 }
 \references{
 \insertAllCited{}

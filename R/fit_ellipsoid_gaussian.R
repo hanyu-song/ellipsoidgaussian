@@ -38,7 +38,9 @@
 #' @export
 #' @importFrom Rdpack reprompt
 #' @examples
-#' res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 100)
+#' if (reticulate::py_module_available('ctef')) {
+#'   res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 100)
+#' }
 ellipsoid_gaussian <- function(dat,
                                k,
                                scale_col,

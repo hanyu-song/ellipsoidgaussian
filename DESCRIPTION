@@ -1,12 +1,15 @@
 Type: Package
 Package: ellipsoidgaussian
-Title: Fit an ellipsoid-Gaussian distribution
+Title: Fit an Ellipsoid-Gaussian Distribution
 Version: 1.0.0
 Author: Hanyu Song
 Maintainer: Hanyu Song <songhanyu1211@gmail.com>
 Description: An ellipsoid-Gaussian multivariate distribution is induced
     when we use a Gaussian linear factor model, with the latent variables
-    having a von Mises-Fisher distribution on a unit hyper-sphere.
+    having a von Mises-Fisher distribution on a unit hyper-sphere and integrate
+    over the latent variables w.r.t. its distributions.
+    
+    This package fits an ellipsoidn Gaussian latent factor model, which is used to model curved data (such as data on an ellipsoid). The ellipsoid-Gaussian distribution is induced when we use a Gaussian linear factor model with latent variables following a …
 License: MIT + file LICENSE
 Depends: 
     R (>= 3.5.0)
@@ -31,8 +34,8 @@ Imports:
     Rfast,
     rlang
 Suggests: 
-    ggplot2,
     GGally,
+    ggplot2,
     grDevices,
     scales,
     testthat (>= 3.0.0)

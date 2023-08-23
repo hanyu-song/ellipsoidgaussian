@@ -30,9 +30,11 @@
 #' @importFrom ramcmc adapt_S
 #' @importFrom stats rgamma
 #' @examples
+#'   if (reticulate::py_module_available('ctef')) {
 #'  parList <- gen_input_eg(shell,k = 3, updateCenter = TRUE)
 #'  res <- gSGNHT_EG(shell, parList$k, parList$init, parList$prior_par,
 #'                  parList$alg_par, 100, parList$updateCenter)
+#'                  }
 gSGNHT_EG <- function(dat,k, init, prior_par, alg_par, niter, updateCenter) {
   #### initialize ####
   stopifnot(length(init$mu) == k)

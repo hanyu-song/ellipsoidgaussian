@@ -83,7 +83,9 @@ we favor a fit with small noise.
 Results are generally not sensitive to the choice of the prior parameters.
 }
 \examples{
-gen_input_eg(shell, k = 3, TRUE)
+if (reticulate::py_module_available('ctef')) {
+  gen_input_eg(shell, k = 3, TRUE)
+}
 }
 \references{
 \insertAllCited{}

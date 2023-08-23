@@ -1,3 +1,5 @@
+To cite the "ellipsoidgaussian" package in publications, please use the following
+BibTeX entries:
 bibentry(
   bibtype  = "Manual",
   title    = "ellipsoidgaussian: Fit an ellipsoid-Gaussian distribution",

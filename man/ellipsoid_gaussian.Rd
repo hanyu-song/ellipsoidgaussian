@@ -58,7 +58,9 @@ denotes the modified Bessel function of the first kind of order \eqn{v}, with re
 We call this distribution the Ellipsoid-Gaussian (EG).
 }
 \examples{
-res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 100)
+if (reticulate::py_module_available('ctef')) {
+  res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 100)
+}
 }
 \references{
 \insertAllCited{}
