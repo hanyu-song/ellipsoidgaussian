@@ -1,9 +1,16 @@
-To cite the "ellipsoidgaussian" package in publications, please use the following
-BibTeX entries:
 bibentry(
   bibtype  = "Manual",
   title    = "ellipsoidgaussian: Fit an ellipsoid-Gaussian distribution",
   author   = "Hanyu Song",
   year     = "2023",
   note = "R package version 1.0.0",
+)
+bibentry(
+  bibtype = "Manual",
+  title = "Curved factor analysis with the Ellipsoid-Gaussian distribution",
+  author = "Hanyu Song and David B. Dunson",
+  year= "2022",
+  eprint = "2201.08502",
+  archivePrefix = "arXiv",
+  primaryClass = "stat.ME",
 )
