@@ -1216,7 +1216,9 @@ logDensityTau_prior <- function(tau_prop, tau_prior) {
   if ((!is.null(tau_prior$upperB)) && tau_prop > tau_prior$upperB) {
     return(-Inf)
   }
-  res <- stats::dgamma(tau_prop, tau_prior$cvmf, tau_prior$dvmf, log = T)
+  res <- stats::dnorm(tau_prop, mean = tau_prior$cvmf, sd = tau_prior$dvmf,
+                      log = TRUE)
+ # res <- stats::dgamma(tau_prop, tau_prior$cvmf, tau_prior$dvmf, log = T)
   return(res)
 }
 

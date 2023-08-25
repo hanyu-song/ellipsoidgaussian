@@ -1,10 +1,14 @@
 ---
-title: "my-vignette"
+title: "The Ellipsoid-Gaussian model"
 output: rmarkdown::html_vignette
+bibliography: ../inst/REFERENCES.bib
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{The Ellipsoid-Gaussian model}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE}
@@ -14,6 +18,127 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+**ellipsoidgaussian** is an R package that provides an efficient
+function for fitting the ellipsoid-Gaussian model using a Bayesian
+method. The model, introduced by @song2022curved, was inspired by the
+need for new models for characterizing dependence in multivariate data.
+The multivariate Gaussian distribution is routinely used, but cannot
+characterize nonlinear relationships in the data. Most non-linear
+extensions tend to be highly complex; for example, involving estimation
+of a non-linear regression model in latent variables.
+
+The relatively simple class of ellipsoid-Gaussian multivariate
+distributions, which are derived by using a Gaussian linear factor model
+involving latent variables having a von Mises-Fisher distribution on a
+unit hyper-sphere. Mathematically, it is defined as
+$$  {x}_i = {c} + {\Lambda} {\eta}_i + \epsilon_i, \quad \epsilon_i \sim \text{N}_p(0, \Sigma), \quad \eta_i \sim \text{vMF}(\mu, \tau),\quad i=1,\ldots,n,\label{equ:egdefinition}$$
+where $i$ denotes the observation index for the $n$ observations in the
+data set, $x_i, \eta_i$ and $\epsilon_i$ represent the observation
+vector, the latent variable and noise vector associated with observation
+$i$. $c, \Lambda, \Sigma := \text{diag}(\sigma_1^2, \ldots, \sigma_p^2), \mu$ and $\tau$ are the parameters for the
+model. Integrating over the distribution of the latent factors yields
+the ellipsoid-Gaussian (marginal) distribution. The density is
+$$f_\text{EG}(x) = \frac{C_k(\tau)}{(2\pi)^{\frac{p}{2}}\prod_{i = 1}^p \sigma_i} \exp\left\{-\frac{1}{2} (x - {c})^T \Sigma^{-1} (x - {c})\right\}
+   \varsigma\left\{ \tau \mu + \Lambda^T \Sigma^{-1
+}(x - {c}) , \frac{\Lambda^T \Sigma^{-1}\Lambda}{2}\right\},$$ with
+respect to the Lebesgue measure on $\mathbb{R}^p,$ where
+$\varsigma(\kappa \vartheta, A)$ is the normalizing constant in a
+Fisher-Bingham density that is defined as
+$$f({y}; \kappa, \vartheta, A) = \frac{1}{\varsigma(\kappa \vartheta, A)} \exp\left(\kappa \vartheta^T{y} - {y}^T A {y}\right),$$
+with respect to $\mathscr{S}^{k-1},$where ${y}, \vartheta \in \mathbb{S}^{k -1}$, $\kappa \geq 0$, $A \in \mathbb{R}^{p \times p}$ is a symmetric matrix, and $\varsigma(\kappa \vartheta, A)$ is a normalizing constant that
+is best numerically approximated via saddle point approximation [@KumeWood05].
+
+Ellipsoid-Gaussian distribution can flexibly model
+curved relationships among variables with lower-dimensional structures; see @song2022curved for more details.
+
+#### Installing ellipsoidgaussian 
+**ellipsoidgaussian** will run in Windows, Mac OS X, or Linux. To install **ellipsoidgaussian** you first need to install R and we highly recommend install RStudio as well. 
+
+Type in R 
+```{r, eval = FALSE}
+install.packages('devtools')
+devtools::install_github()
+```
+to install the latest development version of the package from the Github page.
+
+To instead install the latest official release of the package from CRAN, type
+```{r, eval = FALSE}
+install.packages('ellipsoidgaussian')
+```
+
+In either case, if you type
+```{r set up}
 library(ellipsoidgaussian)
 ```
+
+it will load all the **ellipsoidgaussian** functions. Note that Python and the `ctef` module installation (CHANGE: link) is required for `gen_input_eg()`. To check whether the module is successfully installed, run the following command:
+```{r}
+reticulate::py_module_available('ctef')
+```
+
+One can simulate data from an ellipsoid-Gaussian distribution using the `rellipsoidgaussian()` function, specifying the sample size n and the parameters $c$ (center), $\Lambda$ (Lambda), $\mu$ (mu), $\tau$ (tau) and $\Sigma$ (Sigma), e.g.
+```{r generate from EG}
+dat <- rellipsoidgaussian(n = 1000, 
+                          center = rep(0,3), 
+                          Lambda = matrix(rnorm(6, mean = -5, sd = 2),nrow = 3, ncol = 2), 
+                          mu = c(0,1), 
+                          tau = 1, 
+                          Sigma = diag(0.5,3))
+```
+
+The shell data included in the package is an example data set simulated from the model. In this vignette, we use the horse mussels data. You can load the data via
+```{r load data}
+data(mussels)
+```
+
+Use 
+```{r help data}
+help(mussels)
+```
+to learn about the data set. One interest of the study was to understand the relationship of muscle mass, the mass of the edible portion, to the measurements of the horse mussels. In the analysis below, we scale the data since each measurement is on different scales.
+
+##### Visualizing the data 
+
+The package supports visualization using scatter plot matrices, with correlation in the upper triangular part, density on the diagonal, and scatter plots on the lower triangular part. 
+
+Before fitting the model, we can visualize the data to detect the curvature.
+
+```{r visualize}
+pairsPlot_onedata(scale(mussels))
+```
+
+###### Fitting the model & running the MCMC chain
+
+Taking a Bayesian approach, we propose a hybrid of geodesic stochastic gradient Nosé-Hoover Thermostats (gSGNHT) [@liu16sgmcmc] and adaptive Metropolis [@vihola12AM] for posterior sampling. The prior distribution is specified on the help page of `gen_input_eg()`. The initial values of the parameters are produced by `gen_input_eg()` using  @melikechi2023ellipsoid. `ellipsoid_gaussian()` automates the model fitting process by first generating the initial values and then sampling from the posterior distribution. It also allows the option to update or not update the center $c$ during the sampling process. When the center is not updated, it is fixed at the initial value. Users can also specify the algorithm-specific parameters, including the minibatch size,the step size, and the scalar parameter, all of which are tuning parameters for the gSGNHT algorithm; see @liu16sgmcmc for more details. The default values for these parameters are 50, $10^{-4}$ and 0.1. Other parameters that require user input are `k` (The number of latent dimensions), `scale_col` (Whether each variable should be scaled to have mean 0 and variance 1) and `niter` (total number of iterations for the sampling process). The output are saved in a list, with samples associated with each parameter saved as an element in the list.
+
+```{r fit the model}
+samples <- ellipsoid_gaussian(dat = mussels, 
+                          k = 3, 
+                          scale_col = FALSE, 
+                          updateCenter = TRUE, 
+                          niter = 5000)
+```
+
+##### Generating posterior predictive samples
+We can generate posterior predictive samples using the output from ``ellipsoid_gaussian``.
+
+```{r generate posterior predictive}
+ppd <- gen_posterior_predictive(n = 200, samples = samples, burnin = 2500)
+```
+
+##### Visualizing ellipsoid-Gaussian results
+We can both visualize the posterior predictive samples alone and visualize the samples with the original data set in juxtaposition. To visualize just the posterior predictive samples, we run
+```{r visualize result 1}
+pairsPlot_onedata(ppd)
+```
+To visualize the two data sets in juxtaposition, we run
+```{r visualize results}
+pairsPlot(scale(mussels), ppd)
+```
+
+
+If you find bugs or want to suggest new features please visit the
+**ellipsoidgaussian** [GitHub issues
+page](https://github.com/hanyu-song/ellipsoidgaussian/issues).
+
+##### Reference
