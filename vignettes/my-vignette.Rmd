@@ -136,6 +136,16 @@ To visualize the two data sets in juxtaposition, we run
 pairsPlot(scale(mussels), ppd)
 ```
 
+##### Postprocessing the factor loadings 
+
+```{r post process the factor loadings}
+aligned <- postprocess(scale(mussels), samples, burnin = 2500)
+```
+
+```{r plot the factor loadings}
+p1 <- plot_factor_loadings(lambda_samples = aligned$lambda, row_idx = 1:4) 
+print(p1)
+```
 
 If you find bugs or want to suggest new features please visit the
 **ellipsoidgaussian** [GitHub issues

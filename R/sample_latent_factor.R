@@ -23,7 +23,7 @@ calcFB_pars <- function(invSigma, lambda, tau, mu, center,dat, norm_) {
     return(list(para1 = para1, para2 = para2))
   }
 
-#  kap <- apply(para1,2,function(y) pracma::Norm(y,2))
+  #  kap <- apply(para1,2,function(y) pracma::Norm(y,2))
   kap <- apply(para1,2,function(y) sqrt(sum(abs(y^2))))
   para1 <- sweep(para1, 2, kap, FUN = '/')
   res <- list(para1 = para1, para2 = para2, kap = kap)
@@ -55,18 +55,19 @@ rFB_MH <- function(eta1, para1, A) {
   if (is.null(eta1)) {
     eta1 <- para1
   }
- # k <- length(eta1)
+  eta1 <- c(eta1)
+  # k <- length(eta1)
   cur <- eta1 / sum(eta1^2)
   # proposal:
-#  prop <- one_rvmf(eta1,40)  # can change to 40
+  #  prop <- one_rvmf(eta1,40)  # can change to 40
   prop <- Rfast::rvmf(1, eta1, 40)
-#  Omega <- diag(k) + 2 * A + tau1 * (diag(k) - tcrossprod(para1))
- # Sigma <- chol2inv(chol(Omega))
+  #  Omega <- diag(k) + 2 * A + tau1 * (diag(k) - tcrossprod(para1))
+  # Sigma <- chol2inv(chol(Omega))
   #chol_Sigma <- chol(Sigma)
- # prop <- my_racg(1, chol_Sigma) # draw n of them at the same time
-  logAcceptRatio <- dFB_cpp_log(prop, para1, A, 0) -
+  # prop <- my_racg(1, chol_Sigma) # draw n of them at the same time
+  logAcceptRatio <- dFB_cpp_log(c(prop), para1, A, 0) -
     dFB_cpp_log(cur, para1, A, 0)
-   # dacg_up2const(eta1, Omega, log_ = T) - dacg_up2const(prop, Omega, log_ = T)
+  # dacg_up2const(eta1, Omega, log_ = T) - dacg_up2const(prop, Omega, log_ = T)
   u <- log(stats::runif(1))
   acpt_status <- (u<= logAcceptRatio)
   if (acpt_status) {
@@ -100,23 +101,23 @@ predictY <- function(temp, tau_par, dat,missing_idx,mis_pos) {
   tau <- transformedTau2Tau(temp$ltau,
                             tau_par$lowerB, tau_par$upperB,
                             tau_par$fac)
- # lat_fac <- drawLatFac(invSig, temp$lambda, tau, temp$mu, temp$center, dat)
+  # lat_fac <- drawLatFac(invSig, temp$lambda, tau, temp$mu, temp$center, dat)
   lat_fac <- drawLatFac_chain(invSig, temp$lambda, tau, temp$mu, temp$center, dat,30)
- # print(lat_fac$acpt_rate) #all 1, may not be good
+  # print(lat_fac$acpt_rate) #all 1, may not be good
   # if there is arbitrary missing pattern, this step can be easily adapted for that
   # assume that the last column is the missing y
 
   #mean <- sweep(temp$lambda[ncol(dat),,drop = F] %*% t(lat_fac$latFacs), MARGIN = 1,
-              #  STATS = temp$center, FUN = '+') # p by n
+  #  STATS = temp$center, FUN = '+') # p by n
   # problem? should be conditonal distribution rather than marginal?
   ## may be wrong
- ## mean <- apply(lat_fac$latFacs, 1, function(x) sum(x * temp$lambda[ncol(dat),])) +
+  ## mean <- apply(lat_fac$latFacs, 1, function(x) sum(x * temp$lambda[ncol(dat),])) +
   ##  temp$center[ncol(dat)]
- ## sd <- 1 / sqrt(invSig[ncol(dat)])
+  ## sd <- 1 / sqrt(invSig[ncol(dat)])
   ##
   sigma <- diag(1 / sqrt(invSig))
   for (i in seq_along(missing_idx)) {
-#    row <- as.numeric(names(missing_idx)[i])
+    #    row <- as.numeric(names(missing_idx)[i])
     dep <- missing_idx[[i]]
     given <- setdiff(1:ncol(dat), dep)
     # should speed this function up
@@ -124,9 +125,9 @@ predictY <- function(temp, tau_par, dat,missing_idx,mis_pos) {
     # should speed this function up
     dat[i, dep] <- Rfast::rmvnorm(1, par$condMean, sigma = par$condVar)
   }
- # browser(expr = {any(dat[mis_pos] > 9)})
+  # browser(expr = {any(dat[mis_pos] > 9)})
 
-# return(list(dat = dat, acpt_rate = lat_fac$acpt_rate)) # may change this line to remove acpt_rate
+  # return(list(dat = dat, acpt_rate = lat_fac$acpt_rate)) # may change this line to remove acpt_rate
   return(dat[mis_pos])
 }
 
@@ -151,19 +152,19 @@ drawLatFac_chain <- function(invsig, lambda, tau, mu, center, dat, nsample = 20)
                       lambda,
                       tau,mu, center,dat,norm_ = FALSE)
   for (l in 1:nrow(dat)) {
-   # print('new')
-   # print(pars$para1[,l])
+    # print('new')
+    # print(pars$para1[,l])
     temp <- rFB_MH(NULL, pars$para1[,l], pars$para2)
     for (ss in 1:nsample) {
-   #   print(temp$res)
+      #   print(temp$res)
       temp <- rFB_MH(temp$res, pars$para1[,l], pars$para2)
       #print(apply(pars$para1,2,function(y) pracma::Norm(y,2)))
       acpt <- acpt + temp$acpt_status
-    # temp <- rLatFac_MH(center, invsig, lambda, pars$para1[,l] / pars$kap[l],
-    #  mu, tau, dat[l,,drop = F])
-   #   print(temp$res)
+      # temp <- rLatFac_MH(center, invsig, lambda, pars$para1[,l] / pars$kap[l],
+      #  mu, tau, dat[l,,drop = F])
+      #   print(temp$res)
     }
-       latFacs[l,] <- temp$res
+    latFacs[l,] <- temp$res
     #  print(temp$acpt_status)
     #  print(anyNA(temp$res))
 
@@ -171,7 +172,7 @@ drawLatFac_chain <- function(invsig, lambda, tau, mu, center, dat, nsample = 20)
     #  cat('i = ',i, 'j =',j, 'l =',l,'\n')
   }
   acpt_rate <- acpt / nrow(dat) / nsample
- # print(acpt_rate)
+  # print(acpt_rate)
   #   latFacs[i,,j] <- updateLatFac_MH(latFacs[i,,j - 1], res_gibbs$lambda[ii,,], res_gibbs$invsig[ii,],
   #   res_gibbs$tau[ii,1], res_gibbs$mu[ii,], res_gibbs$center[ii,], dat)
   return(list(latFacs = latFacs, acpt_rate = acpt_rate))
@@ -208,4 +209,131 @@ dFB_cpp_log <- function(X,para1, para2, fb_const_part) {
   return(res)
 }
 
+#' Sample latent factors
+#'
+#' @description
+#' `draw_latent_factors` simulates \eqn{\min(500,
+#' \text{number of post burn-in samples})} latent factors for each observation from
+#' their posterior distribution, a Fisher-Bingham distribution. Simulating from
+#' a Fisher-Bingham is challenging and we use  \insertCite{Hoff09FB}{ellipsoidgaussian}.
+#' @param dat A matrix of data, n by p.
+#' @param samples A list of posterior samples, output of [ellipsoid_gaussian()].
+#' @param burnin Number of burn-in samples.
+#'
+#' @export
+#' @references \insertAllCited{}
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @examples
+#' lat_facs <- draw_latent_factors(shell, samples, burnin = 2500)
+#'
+draw_latent_factors <- function(dat, samples, burnin = NULL) {
+  #  res <- matrix(NA, 1000, nrow(dat))
 
+  if (is.null(burnin)) {
+    burnin <- nrow(samples$tau) / 2
+  }
+  niter <- nrow(samples$tau) - burnin + 1
+  num_samp <- min(500, niter)
+  idx <- sample((burnin + 1):nrow(samples$tau), num_samp)
+  iterations <- numeric(num_samp)
+  lat_facs <- array(NA, c(nrow(dat), dim(samples$lambda)[3], num_samp))
+  progress_bar <- utils::txtProgressBar(min=0, max=num_samp, style = 3, char="=")
+
+  for (i in seq_along(idx)) {
+    iter <- idx[i]
+    iterations[i] <- iter
+    temp2<- drawLatFac_chain(samples$invsig[iter,], samples$lambda[iter,,],
+                             samples$tau[iter,1], samples$mu[iter,],
+                             samples$center[iter,], dat,30)
+    lat_facs[,,i] <- temp2$latFacs
+    #   temp <- predictY2(samples$invsig[iter,], samples$lambda[iter,,],
+    #                samples$center[iter,], lat_facs[,,i],dat)
+    #print(temp$acpt_rate)
+    #  res[i,] <- temp$y
+    #  cat('iteration',i,'completed.\n')
+    utils::setTxtProgressBar(progress_bar, value = i - 1)
+  }
+  close(progress_bar)
+
+  return(list(lat_facs = lat_facs, iterations = iterations))
+}
+
+#' Resolve rotational ambiguity in samples of factor loadings and factors jointly
+#'
+#' @description
+#' `joint_rot_samples` performs the varimax rotation on the factor loadings samples
+#' and column-based matching to resolve sign and label switching; see the help page of
+#' [infinitefactor::jointRot()] for more details.
+#'
+#' @param lambda_samps The lambda samples in the list of samples as output of
+#' [ellipsoid_gaussian()].
+#' @param lat_facs The latent factors, an array of samples, number of observations
+#' x latent dimensions x number of samples
+#' @param iterations Iteration indices of the samples that are used for drawing
+#' the latent factors, a vector.
+#' @export
+#'
+joint_rot_samples <- function(lambda_samps, lat_facs, iterations) {
+  if (!requireNamespace("infinitefactor", quietly = TRUE)) {
+    stop(
+      "Package \"infinitefactor\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  num_samp <- dim(lat_facs)[3]
+  etaSamples <- vector('list', length = num_samp)
+  lambSamples <- vector('list', length = num_samp)
+  for (i in seq_len(num_samp)) {
+    iter <- iterations[i]
+    etaSamples[[i]] <- lat_facs[,,i]
+    lambSamples[[i]] <- lambda_samps[iter,,]
+  }
+  aligned <- infinitefactor::jointRot(lambSamples, etaSamples)# a list of niter
+  return(aligned)
+}
+#' Post-process the factor loadings
+#'
+#' @description
+#' `postprocess` post process the samples of the factor loadings to resolve
+#' rotational ambiguity. It performs the varimax rotation on the factor loadings samples
+#' and column-based matching to resolve sign and label switching; see the help page of
+#' [infinitefactor::jointRot()] for more details.
+#'
+#' @param dat A matrix of data, n by p.
+#' @param samples A list of samples from the posterior distribution, output of
+#' [ellipsoid_gaussian()].
+#' @param burnin Number of burn-in samples.
+#' @export
+#' @examples
+#' aligned <- postprocess(shell, samples, burnin = 2500)
+#'
+postprocess <- function(dat, samples, burnin = NULL) {
+  lat_facs <- draw_latent_factors(dat, samples, burnin)
+  res <- joint_rot_samples(samples$lambda, lat_facs$lat_facs, lat_facs$iterations)
+  return(res)
+}
+#' Visualize the factor loadings
+#'
+#' @description
+#' `plot_factor_loadings` visualizes the posterior mean of the factor loadings matrix. We
+#' recommend post processing the samples first using [draw_latent_factors()] and
+#' [postprocess()].
+#'
+#' @param lambda_samples A list of the samples, length = number of samples,
+#' each element is p by k.
+#' @param row_idx A vector row indices of the factor loadings to be plotted. Default
+#' is all the rows are included.
+#' @export
+plot_factor_loadings <- function(lambda_samples, row_idx = NULL) {
+  if (!requireNamespace("infinitefactor", quietly = TRUE)) {
+    stop(
+      "Package \"infinitefactor\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  if (is.null(row_idx)) {
+    row_idx <- 1:nrow(lambda_samples[[1]])
+  }
+  p1 <- infinitefactor::plotmat(infinitefactor::lmean(lambda_samples)[row_idx,])
+  return(p1)
+}
