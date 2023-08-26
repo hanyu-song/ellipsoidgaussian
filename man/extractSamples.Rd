@@ -9,7 +9,7 @@ extractSamples(sampleList, rowIdx)
 \arguments{
 \item{sampleList}{A list of samples}
 
-\item{rowIdx}{The row index of the elmements that we want to extract}
+\item{rowIdx}{The row index of the elements that we want to extract}
 }
 \value{
 A list of extract samples

@@ -63,6 +63,11 @@ certain observations is disabled.}
 \description{
 \code{updateSample_gSGNHT} is the sampling procedure for one iteration of update
 in gSGNHT.
-See Algorithm 2 in the Appendix of  \insertCite{liu16sgmcmc;textual}{ellipsoidgaussian}
+See Algorithm 2 in the Appendix of Liu et al. (2016)
 for more details.
+}
+\references{
+Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+methods. In Advances in Neural Information Processing Systems 29, pages
+3009–3017.
 }

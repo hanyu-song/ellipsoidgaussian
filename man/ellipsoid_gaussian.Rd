@@ -39,7 +39,8 @@ All the samples, including the pre and post burn-in ones.
 }
 \description{
 \code{ellipsoid_gaussian} fits an ellipsoid-Gaussian distribution (or a von-Mises Fisher linear factor model)
-to the data using geodesic Stochastic Gradient Nose-Hoover Thermostats (gSGNHT) \insertCite{liu16sgmcmc}{ellipsoidgaussian}.
+to the data using geodesic Stochastic Gradient Nose-Hoover Thermostats
+(gSGNHT) (Liu et al. 2016).
 }
 \details{
 The von-Mises Fisher linear factor model is defined by
@@ -63,5 +64,7 @@ if (reticulate::py_module_available('ctef')) {
 }
 }
 \references{
-\insertAllCited{}
+Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+methods. In Advances in Neural Information Processing Systems 29, pages
+3009–3017.
 }

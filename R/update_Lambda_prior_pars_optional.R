@@ -11,7 +11,7 @@
 
 #' @importFrom GIGrvg rgig
 updatePhi <- function(a, lambda1) {
-  temp <- abs(lambda1);
+  temp <- abs(lambda1)
   ts <- sapply(c(temp), function(x) GIGrvg::rgig(n=1,  lambda = a - 1, chi = 2 * x, psi = 1))
  # ts <- sapply(c(temp), function(x) rmutil::rginvgauss(n = 1, m = sqrt(2 * x), s = 0.5 / x, f = a - 1))
 #  ts <- sapply(c(temp), function(x) .Call("rgig",n=1,  a - 1, 2 * x, 1, PACKAGE = 'GIGrvg'))

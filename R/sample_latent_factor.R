@@ -15,7 +15,7 @@
 calcFB_pars <- function(invSigma, lambda, tau, mu, center,dat, norm_) {
   # -log(normalising)+ mu_kap_prod * x - x^T A x
   centered_dat <- sweep(dat, MARGIN = 2, STATS = center, FUN = '-')
-  lambinvSig = sweep(t(lambda),MARGIN = 2, STATS = invSigma, FUN = '*') # equivalent to  t(lambda) %*% diag(invSigma)
+  lambinvSig <- sweep(t(lambda),MARGIN = 2, STATS = invSigma, FUN = '*') # equivalent to  t(lambda) %*% diag(invSigma)
   para12 <- lambinvSig %*% t(centered_dat)
   para1 <- sweep(para12, 1, tau * mu, FUN = '+')
   para2 <- lambinvSig %*% lambda / 2
@@ -37,17 +37,20 @@ calcFB_pars <- function(invSigma, lambda, tau, mu, center,dat, norm_) {
 #'
 #' @description
 #' `rFB_MH` simulates from a Fisher-Bingham distribution using
-#' \insertCite{Hoff09FB}{ellipsoidgaussian}.
+#' Hoff (2009).
 #'
 #' @param eta1 A vector of length k
 #' @param para1 A vector of length k
 #' @param A A square matrix, k by k.
 #'
 #' @importFrom Rfast rvmf
-#' @importFrom Rdpack reprompt
 #' @importFrom stats runif
 #'
-#' @references \insertAllCited{}
+#' @references
+#' Peter D. Hoff (2009) Simulation of the Matrix Bingham–von Mises–Fisher
+#' Distribution, With Applications to Multivariate and Relational Data,
+#' Journal of Computational and Graphical Statistics, 18:2, 438-456,
+#' DOI: 10.1198/jcgs.2009.07177
 rFB_MH <- function(eta1, para1, A) {
   # tau1: L2 norm of para1; if null, have to compute it
   # para1: a vector
@@ -79,7 +82,7 @@ rFB_MH <- function(eta1, para1, A) {
 
 
 
-#' Impute the mising values
+#' Impute the missing values
 #'
 #' @description
 #' `predictY` imputes the missing entries in \code{dat} by assuming that
@@ -119,9 +122,11 @@ predictY <- function(temp, tau_par, dat,missing_idx,mis_pos) {
   for (i in seq_along(missing_idx)) {
     #    row <- as.numeric(names(missing_idx)[i])
     dep <- missing_idx[[i]]
-    given <- setdiff(1:ncol(dat), dep)
+    given <- setdiff(seq_len(ncol(dat)), dep)
     # should speed this function up
-    par <- condMVNorm::condMVN(temp$lambda %*% t(lat_fac$latFacs[i,,drop = F]) + temp$center, sigma = sigma, dep = dep, given =  given, X.given = dat[i, given])
+    par <- condMVNorm::condMVN(temp$lambda %*% t(lat_fac$latFacs[i,,drop = FALSE]) +
+                                 temp$center, sigma = sigma, dep = dep,
+                               given =  given, X.given = dat[i, given])
     # should speed this function up
     dat[i, dep] <- Rfast::rmvnorm(1, par$condMean, sigma = par$condVar)
   }
@@ -151,11 +156,11 @@ drawLatFac_chain <- function(invsig, lambda, tau, mu, center, dat, nsample = 20)
   pars <- calcFB_pars(invsig,
                       lambda,
                       tau,mu, center,dat,norm_ = FALSE)
-  for (l in 1:nrow(dat)) {
+  for (l in seq_len(nrow(dat))) {
     # print('new')
     # print(pars$para1[,l])
     temp <- rFB_MH(NULL, pars$para1[,l], pars$para2)
-    for (ss in 1:nsample) {
+    for (ss in seq_len(nsample)) {
       #   print(temp$res)
       temp <- rFB_MH(temp$res, pars$para1[,l], pars$para2)
       #print(apply(pars$para1,2,function(y) pracma::Norm(y,2)))
@@ -215,13 +220,17 @@ dFB_cpp_log <- function(X,para1, para2, fb_const_part) {
 #' `draw_latent_factors` simulates \eqn{\min(500,
 #' \text{number of post burn-in samples})} latent factors for each observation from
 #' their posterior distribution, a Fisher-Bingham distribution. Simulating from
-#' a Fisher-Bingham is challenging and we use  \insertCite{Hoff09FB}{ellipsoidgaussian}.
+#' a Fisher-Bingham is challenging and we use the method by Hoff (2009).
 #' @param dat A matrix of data, n by p.
 #' @param samples A list of posterior samples, output of [ellipsoid_gaussian()].
 #' @param burnin Number of burn-in samples.
 #'
 #' @export
-#' @references \insertAllCited{}
+#' @references
+#' Peter D. Hoff (2009) Simulation of the Matrix Bingham–von Mises–Fisher
+#' Distribution, With Applications to Multivariate and Relational Data,
+#' Journal of Computational and Graphical Statistics, 18:2, 438-456,
+#' DOI: 10.1198/jcgs.2009.07177
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @examples
 #' lat_facs <- draw_latent_factors(shell, samples, burnin = 2500)
@@ -332,7 +341,7 @@ plot_factor_loadings <- function(lambda_samples, row_idx = NULL) {
     )
   }
   if (is.null(row_idx)) {
-    row_idx <- 1:nrow(lambda_samples[[1]])
+    row_idx <- seq_len(nrow(lambda_samples[[1]]))
   }
   mat <- infinitefactor::lmean(lambda_samples)[row_idx,]
   p1 <- infinitefactor::plotmat(mat)

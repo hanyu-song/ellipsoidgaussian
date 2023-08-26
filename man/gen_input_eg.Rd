@@ -55,7 +55,7 @@ should be updated during the sampling.
 }
 \details{
 \code{gen_input_eg} initializes the sampler with CTEF
-\insertCite{melikechi2023ellipsoid}{ellipsoidgaussian}. When the sample size
+(Melikechi and Dunson 2023). When the sample size
 \eqn{n \leq 50}, the minibatch size is 50; else, the minibatch size is \eqn{\max
  (4\%n, 50).}  While our sampler allows direct
 updates of \eqn{\Lambda} with a Dirichlet-Laplace prior, we find that
@@ -88,5 +88,6 @@ if (reticulate::py_module_available('ctef')) {
 }
 }
 \references{
-\insertAllCited{}
+Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley
+transform. arXiv Preprint. arXiv:2304.10630.
 }

@@ -1,18 +1,17 @@
 Type: Package
 Package: ellipsoidgaussian
-Title: The ellipsoid-Gaussian model
+Title: Fit an ellipsoid-Gaussian model
 Version: 1.0.0
 Author: Hanyu Song
 Maintainer: Hanyu Song <songhanyu1211@gmail.com>
 Description: The package provides Bayesian estimation of the
-    ellipsoid-Gaussian model, introduced by
-    \insertCite{song2022curved}{ellipsoidgaussian}.  The
-    ellipsoid-Gaussian distribution can be used to model data distributed
-    around a hyper-ellipsoid.  It is induced when we use a Gaussian linear
+    ellipsoid-Gaussian model introduced by Song and Dunson (2022).  The
+    ellipsoid-Gaussian distribution can be used for modeling data distributed
+    around a hyper-ellipsoid. It is induced when we use a Gaussian linear
     factor model with latent variables following a von Mises-Fisher
-    distribution and have the latent variables integrated out. Options for
-    generating samples from the posterior predictive distribution, and
-    plotting results are also provided.
+    distribution and have the latent variables integrated out. We also provide options
+    for generating samples from the posterior predictive distribution,
+    code for post-processing results. Some plotting functions are also included.
 License: MIT + file LICENSE
 Depends: 
     R (>= 3.5.0)

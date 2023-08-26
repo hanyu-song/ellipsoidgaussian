@@ -9,9 +9,9 @@ calcgradLambdaprior_cpp(Lambda, phi, kappa)
 \arguments{
 \item{Lambda}{A numeric matrix, the factor loading matrix.}
 
-\item{phi}{A prior parameter in the Dirichlet-laplace prior.}
+\item{phi}{A prior parameter in the Dirichlet-Laplace prior.}
 
-\item{kappa}{A prior parameter in the Dirichlet-Lapalce prior.}
+\item{kappa}{A prior parameter in the Dirichlet-Laplace prior.}
 }
 \description{
 \code{calcgradLambdaprior_cpp} calculates the gradient of the Dirichlet-Laplace

@@ -23,10 +23,14 @@ calclogPseudoconst_VecParGrad_fast(
 
 \item{order_}{The order of saddlepoint approximation, 1: first-order, 2:
 second-order first version, 3: second-order second version. Default is 3 for
-better accuracy. See \insertCite{KumeWood05}{ellipsoidgaussian}
-P975 for more details.}
+better accuracy. See Kume and Wood (2005) P975 for more details.}
 }
 \description{
 \code{calclogPseudoconst_VecParGrad_fast} calculates the gradient of the
 log-likelihood w.r.t. the vector parameter of the pseudo-normalising constant
+}
+\references{
+Kume, A., & Wood, A. T. A. (2005). Saddlepoint Approximations for the
+Bingham and Fisher-Bingham Normalising Constants. Biometrika, 92(2), 465–476.
+http://www.jstor.org/stable/20441200
 }

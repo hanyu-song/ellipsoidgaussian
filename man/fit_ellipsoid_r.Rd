@@ -16,7 +16,7 @@ The parameters of the fitted ellipsoid.
 }
 \description{
 \code{fit_ellipsoid_r} fits an ellipsoid to the noisy data and outputs relevant parameters
-using Cayley transform ellipsoid fitting (CTEF)  \insertCite{melikechi2023ellipsoid}{ellipsoidgaussian}.
+using Cayley transform ellipsoid fitting (CTEF) (Melikechi and Dunson 2023).
 }
 \examples{
  if (reticulate::py_module_available('ctef')) {
@@ -24,5 +24,6 @@ fit_ellipsoid_r(shell, 3)
 }
 }
 \references{
-\insertAllCited{}
+Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley
+transform. arXiv Preprint. arXiv:2304.10630.
 }

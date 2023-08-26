@@ -93,10 +93,10 @@ return(part2);
 //' @param lambda A numeric matrix, p by k, the factor loading matrix.
 //' @param psdMat_grad The gradient w.r.t. the matrix parameter in the pseudo-normalising
 //' constant.
-//' @param vec_grad The gradient w.r.t. the vector parameter in the pseduo-normalising
+//' @param vec_grad The gradient w.r.t. the vector parameter in the pseudo-normalising
 //' constant.
 //' @param invSigma A vector of precisions, length = p.
-//' @param centered_sdat A matrix of centered minibatch data, n by p.
+//' @param centered_sdat A matrix of centered mini-batch data, n by p.
 //'
 //[[Rcpp::export]]
 std::vector<double> calc_lambda_grad_cpp(const arma::mat& lambda,

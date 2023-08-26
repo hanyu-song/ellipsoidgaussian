@@ -89,10 +89,12 @@ rellipsoidgaussian <- function(n, center, Lambda, mu, tau, Sigma) {
 calclogC_up2const <- function(tau, k, logged) {
   if (logged) {
     unlogged_tau <- exp(tau)
-    res <- (k / 2 - 1) * log(unlogged_tau) - (log(besselI(unlogged_tau, k / 2 - 1, expon.scaled = T)) + unlogged_tau)
+    res <- (k / 2 - 1) * log(unlogged_tau) -
+      (log(besselI(unlogged_tau, k / 2 - 1, expon.scaled = TRUE)) + unlogged_tau)
   }
   else {
-    res <- (k / 2 - 1) * log(tau) - (log(besselI(tau, k / 2 - 1, expon.scaled = T)) + tau)
+    res <- (k / 2 - 1) * log(tau) -
+      (log(besselI(tau, k / 2 - 1, expon.scaled = TRUE)) + tau)
   }
   return(res)
 }
@@ -119,7 +121,7 @@ dellipsoidgaussian_up2const_logged <- function(dat, Sigma, lambda, tau, mu, cent
   centered_dat <- sweep(dat, MARGIN = 2, STATS = center, FUN = '-')
   n <- nrow(centered_dat)
   k <- ncol(lambda)
-  const <- calclogC_up2const(tau, k,logged = F)
+  const <- calclogC_up2const(tau, k,logged = FALSE)
   const2 <- 0.5 * sum(log(Sigma))
   const <- const - const2
   const <- n * const

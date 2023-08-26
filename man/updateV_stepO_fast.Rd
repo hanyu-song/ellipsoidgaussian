@@ -31,7 +31,7 @@ e.g. mu.}
 
 \item{all_theta}{A list of the parameter values.}
 
-\item{v}{The auxiliary paraemter.}
+\item{v}{The auxiliary parameter.}
 
 \item{epsilon}{The step size.}
 
@@ -50,6 +50,11 @@ A list of updated V and gradient
 }
 \description{
 \code{updateV_step0_fast} updates the auxiliary parameter V in step O of the
-sampling procedure. See Algorithm 2 in the Appendix of
-\insertCite{liu16sgmcmc;textual}{ellipsoidgaussian} for more details.
+sampling procedure. See Algorithm 2 in the Appendix of Liu et al. (2016)
+for more details.
+}
+\references{
+Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+methods. In Advances in Neural Information Processing Systems 29, pages
+3009–3017.
 }

@@ -31,5 +31,10 @@ updateSample_stepA(
 }
 \description{
 \code{updateSample_stepA} updates the samples in step A of the gSGNHT sampling
-procedure in Algorithm 2  in the Appendix of \insertCite{liu16sgmcmc;textual}{ellipsoidgaussian}.
+procedure in Algorithm 2  in the Appendix of Liu et al. (2016).
+}
+\references{
+Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+methods. In Advances in Neural Information Processing Systems 29, pages
+3009–3017.
 }

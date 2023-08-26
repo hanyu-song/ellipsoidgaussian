@@ -55,7 +55,7 @@ calcSGgrad <- function(theta1,
       # #  print(q)
     #   }
     }
-    dat <- dat[idx,, drop = F]
+    dat <- dat[idx,, drop = FALSE]
   }
  # if (initialization_period) {
  #   # evaluate likelihood
@@ -110,7 +110,7 @@ calcSGgrad <- function(theta1,
 #' @description
 #' `calcpriorgrad` computes the prior gradient w.r.t the parameters in \code{theta1}.
 #'
-#' @param theta1 A list of the parameter values, ordere by their names
+#' @param theta1 A list of the parameter values, ordered by their names
 #' @param p The ambient dimension
 #' @param k The latent dimension
 #' @param prior_para A list of the prior parameters
@@ -146,7 +146,7 @@ calcpriorgrad <- function(theta1, p, k, prior_para) {
     else if (par_name %in% 'linvSig') {
      # linvSigma <- theta1[para_idx[[par_name]]]
       res[[i]] <- calcHalfNormalPriorGrad(theta1$linvSig,
-                                          logInv = T,
+                                          logInv = TRUE,
                                           prior_para$linvSig$asig)  # not verified yet
       }
     else if (par_name %in% 'center') {
@@ -182,7 +182,7 @@ calcpriorgrad <- function(theta1, p, k, prior_para) {
      #res[[i]] <- -(theta1$axesLen - prior_para$axesLen$mu1) / prior_para$axesLen$sig1^2
       ### new part 2 - reparmetrize (N(0, \sigma^2)1(0, \infty))
       res[[i]] <- calcHalfNormalPriorGrad(theta1$axesLen,
-                                          logInv = F,
+                                          logInv = FALSE,
                                           prior_para$axesLen$sig1,
                                           mean = prior_para$axesLen$mu1)  # not verified yet
 
@@ -239,7 +239,8 @@ calcllhgrad <- function(par_names, theta1, sdat, k, tauBounds, accurate_grad) {
         gn2[[i]] <-  approxDeriltau(theta1$ltau, n, k)
       }
       else {
-        gn2[[i]] <- approxDeriTransformedTau(theta1$ltau, tauBounds$lowerB, tauBounds$upperB,n,k,
+        gn2[[i]] <- approxDeriTransformedTau(theta1$ltau, tauBounds$lowerB,
+                                             tauBounds$upperB,n,k,
                                            tauBounds$fac)
       }
     }
@@ -413,11 +414,14 @@ calcGrad_llh_fast <- function(par_names,
   para1 <- sweep(para12, 1, tau * mu, FUN = '+')
   #para2 <- t(lambda) %*% diag(invSigma) %*% lambda / 2
   para2 <- lambinvSig %*% lambda / 2
-  lowerTri <- t(chol(para2)); lowerTriVech <- lowerTri[lower.tri(lowerTri, diag = T)];
+  lowerTri <- t(chol(para2))
+  lowerTriVech <- lowerTri[lower.tri(lowerTri, diag = TRUE)]
   para2_vech <- c(matrixcalc::vech(para2))
-  eig_ <- eigen(para2, symmetric = T)
-  eigVals <- eig_$values; eigVecs <- eig_$vectors;
-  ord <- order(eigVals); ord_eigVals <- eigVals[ord]
+  eig_ <- eigen(para2, symmetric = TRUE)
+  eigVals <- eig_$values
+  eigVecs <- eig_$vectors
+  ord <- order(eigVals)
+  ord_eigVals <- eigVals[ord]
   if(accurate_grad) {
     keyword <- 'Richardson'
   }
@@ -430,7 +434,9 @@ calcGrad_llh_fast <- function(par_names,
   # c(vech(t(chol(A))))},
   # c(vech(para2)), method = 'Richardson')
   # psdMat_grad  <- numDeriv::grad(function(par) {calclogPseudoconst_MatParGrad4(par, para1)}, para2_vech, method = keyword)
-  psdMat_grad  <- numDeriv::grad(function(par) {calclogPseudoconst_MatParGrad4_cpp(par, para1)}, para2_vech, method = keyword)
+  psdMat_grad  <- numDeriv::grad(function(par)
+    {calclogPseudoconst_MatParGrad4_cpp(par, para1)},
+    para2_vech, method = keyword)
   #  vec_grad <- apply(para1, 2, function(y) numDeriv::grad(function(par) {calclogPseudoconst_VecParGrad(par, para2)},
   #      y, method = keyword)) # k by n
   vec_grad <- calcVecGrad_all(para1, ord_eigVals, eigVecs, ord, keyword)
@@ -453,10 +459,12 @@ calcGrad_llh_fast <- function(par_names,
       res[[i]] <-  -c(vec_grad_sum %*% lambinvSig)
     }
     else if(par_names[i] %in% 'linvSig') {
-      res[[i]] <- calc_linvSig_grad_cpp(invSigma, psdMat_grad, vec_grad, lambda, centered_sdat)
+      res[[i]] <- calc_linvSig_grad_cpp(invSigma, psdMat_grad,
+                                        vec_grad, lambda, centered_sdat)
     }
     else if(par_names[i] %in% 'lambda') {
-      temp <- calc_lambda_grad_cpp(lambda,psdMat_grad, vec_grad,invSigma, centered_sdat)
+      temp <- calc_lambda_grad_cpp(lambda,psdMat_grad, vec_grad,invSigma,
+                                   centered_sdat)
       res[[i]] <- matrix(temp, nrow = p, ncol = k)
     }
     else {

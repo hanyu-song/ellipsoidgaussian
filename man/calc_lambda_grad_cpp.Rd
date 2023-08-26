@@ -12,12 +12,12 @@ calc_lambda_grad_cpp(lambda, psdMat_grad, vec_grad, invSigma, centered_sdat)
 \item{psdMat_grad}{The gradient w.r.t. the matrix parameter in the pseudo-normalising
 constant.}
 
-\item{vec_grad}{The gradient w.r.t. the vector parameter in the pseduo-normalising
+\item{vec_grad}{The gradient w.r.t. the vector parameter in the pseudo-normalising
 constant.}
 
 \item{invSigma}{A vector of precisions, length = p.}
 
-\item{centered_sdat}{A matrix of centered minibatch data, n by p.}
+\item{centered_sdat}{A matrix of centered mini-batch data, n by p.}
 }
 \description{
 \code{calc_lambda_grad_cpp} calculates the gradient of the log-likelihood w.r.t.

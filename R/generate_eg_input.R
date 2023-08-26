@@ -8,7 +8,7 @@
 #'
 #' @details
 #' `gen_input_eg` initializes the sampler with CTEF
-#'  \insertCite{melikechi2023ellipsoid}{ellipsoidgaussian}. When the sample size
+#'  (Melikechi and Dunson 2023). When the sample size
 #'  \eqn{n \leq 50}, the minibatch size is 50; else, the minibatch size is \eqn{\max
 #'  (4\%n, 50).}  While our sampler allows direct
 #'  updates of \eqn{\Lambda} with a Dirichlet-Laplace prior, we find that
@@ -60,20 +60,27 @@
 #' @importFrom mice complete
 #'
 #' @references
-#'  \insertAllCited{}
+#' Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley
+#' transform. arXiv Preprint. arXiv:2304.10630.
 #'
 #' @examples
 #' if (reticulate::py_module_available('ctef')) {
 #'   gen_input_eg(shell, k = 3, TRUE)
 #' }
-gen_input_eg <- function(dat,k, updateCenter, minibatchSize = NULL,
-                         epsilon1 =1e-4 , scalar_para = 0.1,
-                         noise_sd = 3, tau_sd = 0.1, cen_sd = 1) {
+gen_input_eg <- function(dat,
+                         k,
+                         updateCenter,
+                         minibatchSize = NULL,
+                         epsilon1 =1e-4 ,
+                         scalar_para = 0.1,
+                         noise_sd = 3,
+                         tau_sd = 0.1,
+                         cen_sd = 1) {
   # lambda_prior: parameter in dirichlet lapalce prior; if null, use uniform prior on the stiefel manifold
   # good default choice for epsilon1: 5 * 1e-4
   # 1e-5 * 5 for air quality data with missing
   if (anyNA(dat)) {
-    dat <- mice::complete(mice::mice(dat,printFlag = F),1)
+    dat <- mice::complete(mice::mice(dat,printFlag = FALSE),1)
     dat <- as.matrix(dat)
   }
   noise_var <- base::rep(1,ncol(dat)) # default
@@ -192,14 +199,16 @@ init_CTEF <- function(dat,noise_var,k,ordered) {
 #'
 #' @description
 #' `fit_ellipsoid_r` fits an ellipsoid to the noisy data and outputs relevant parameters
-#'  using Cayley transform ellipsoid fitting (CTEF)  \insertCite{melikechi2023ellipsoid}{ellipsoidgaussian}.
-#'
+#'  using Cayley transform ellipsoid fitting (CTEF) (Melikechi and Dunson 2023).
 #' @param X A data set, in the matrix format.
 #' @param k The ellipsoid dimension (>1).
 
 #' @returns The parameters of the fitted ellipsoid.
 #' @export
-#' @references \insertAllCited{}
+#' @references
+#' Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley
+#' transform. arXiv Preprint. arXiv:2304.10630.
+#'
 #' @examples
 #'  if (reticulate::py_module_available('ctef')) {
 #' fit_ellipsoid_r(shell, 3)
@@ -209,7 +218,7 @@ fit_ellipsoid_r <- function(X, k) {
   # k: projection to what dimension of space?
   # output: res(list): X_full (the centered data X-\bar X times the matrix of principal components V. So X = (X-\bar X)V.)
   # inv_len (inverse of axes length), center (center)
-  # s(skew-symmetric matrix), R(caley transform of s, an orthogonal matrix)
+  # s(skew-symmetric matrix), R(Caley transform of s, an orthogonal matrix)
   mod <- reticulate::import('ctef',delay_load = TRUE)
   input <- as.matrix(X)
   res <- mod$ctef$ctef(input,as.integer(k))
@@ -220,13 +229,5 @@ fit_ellipsoid_r <- function(X, k) {
   res$result <- NULL
   return(res)
 }
-#ellipsoid_fit_R <- function(X, k) {
-# X: data (matrix)
-# k: projection to what dimension of space?
-# output: res(list): X_full (the centered data X-\bar X times the matrix of principal components V. So X = (X-\bar X)V.)
-# inv_len (inverse of axes length), center (center)
-# s(skew-symmetric matrix), R(caley transform of s, an orthogonal matrix)
-# res <- ellipsoid_fit(as.matrix(X), as.integer(k))
-# return(res)
-#}
+
 

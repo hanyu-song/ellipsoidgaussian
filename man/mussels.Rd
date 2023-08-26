@@ -11,7 +11,7 @@ A data frame with 201 rows and 5 variables
 \item{L}{Shell length in mm}
 \item{S}{Shell mass in gram}
 \item{W}{Shell width in mm}
-\item{M}{Muscle mass in gram, the mass of the edible portion of the mussles.}
+\item{M}{Muscle mass in gram, the mass of the edible portion of the mussels.}
 }
 }
 \usage{
@@ -25,6 +25,7 @@ mass, M, the mass of the edible portion of the mussels. Some of the possible
 predictors are shell length, width, height and mass.
 }
 \references{
-\insertRef{cook1998regression}{ellipsoidgaussian}
+Cook, R. D., & Weisberg, S. (1999). Applied Regression including Computing
+and Graphics. Wiley.
 }
 \keyword{datasets}

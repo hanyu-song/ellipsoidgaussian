@@ -2,7 +2,7 @@
 #' @description
 #' `gSGNHT_EG` draws from the posterior distribution associated with an ellipsoid-Gaussian
 #' likelihood using geodesic Stochastic Gradient Nose-Hoover Thermostats (gSGNHT)
-#' \insertCite{liu16sgmcmc}{ellipsoidgaussian}.
+#' (Liu et al. 2016)
 #'
 #' @param dat A numeric matrix of data (n by p).
 #' @param k The latent dimension.
@@ -35,18 +35,24 @@
 #'  res <- gSGNHT_EG(shell, parList$k, parList$init, parList$prior_par,
 #'                  parList$alg_par, 100, parList$updateCenter)
 #'                  }
+#' @references
+#' Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+#' methods. In Advances in Neural Information Processing Systems 29, pages
+#' 3009–3017.
 gSGNHT_EG <- function(dat,k, init, prior_par, alg_par, niter, updateCenter) {
   #### initialize ####
   stopifnot(length(init$mu) == k)
   stopifnot(ncol(init$axesDir) == k)
-  n <- nrow(dat); p <- ncol(dat)
+  n <- nrow(dat)
+  p <- ncol(dat)
   if(!is.null(prior_par$lambda_prior)) {
-    phis <- matrix(NA, p, k);lambda <- matrix(NA, nrow = p, ncol = k);
-    ts <- stats::rgamma(p,k* prior_par$lambda_prior, 0.5);
+    phis <- matrix(NA, p, k)
+    lambda <- matrix(NA, nrow = p, ncol = k)
+    ts <- stats::rgamma(p,k* prior_par$lambda_prior, 0.5)
     para_dim <- p + p * k + 1 + k + p
     for (j in 1:p) {
     #  phis[j, ] <- MCMCpack::rdirichlet(1, base::rep(prior_par$lambda_prior, k));
-      phis[j, ] <- extraDistr::rdirichlet(1, base::rep(prior_par$lambda_prior, k));
+      phis[j, ] <- extraDistr::rdirichlet(1, base::rep(prior_par$lambda_prior, k))
     #  lambda[j, ] <- rmutil::rlaplace(k, m=0, s= phis[j,] * ts[j])
       for (ll in 1:k) {
         lambda[j,ll] <- extraDistr::rlaplace(n = 1, mu = 0, sigma = phis[j,ll] * ts[j])
@@ -96,7 +102,8 @@ gSGNHT_EG <- function(dat,k, init, prior_par, alg_par, niter, updateCenter) {
     # initial_val$lambda = initial_val$axesDir %*% diag(initial_val$axesLen)
   }
   if ('lambda' %in% names(prior_para)) {
-    initial_val$axesDir <- NULL; initial_val$axesLen <- NULL
+    initial_val$axesDir <- NULL
+    initial_val$axesLen <- NULL
   }
   #prior_para$ltau <- NULL
   # axesLen = axesLen_true)
@@ -139,9 +146,14 @@ gSGNHT_EG <- function(dat,k, init, prior_par, alg_par, niter, updateCenter) {
 #' @returns A list of the samples, by names of the parameters.
 #'
 #' @importFrom utils setTxtProgressBar txtProgressBar
-gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
-                               prior_para, par_type, epsilon1,
-                               Apara, niter,
+gSGNHT_EG_sampling <- function(dat,
+                               latent_dim,
+                               variable_interest,
+                               prior_para,
+                               par_type,
+                               epsilon1,
+                               Apara,
+                               niter,
                                #mode_grad,
                                minibatchSize = 50) {
 
@@ -154,7 +166,8 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
   # tuning parameter: epsilon1, Apara, minibatchSize = 50
 
   #### setting up for sampling ####
-  n <- nrow(dat); p <- ncol(dat);
+  n <- nrow(dat)
+  p <- ncol(dat)
   ltau_ <- ifelse(prior_para$ltau$update, 'non','ltau')
   update_par_name <- setdiff(names(prior_para), ltau_)
   para_dims <- findParDims(update_par_name, variable_interest)
@@ -175,7 +188,8 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
     SS <- NULL
   }
   aux_par <- storeUpdates(para_dims, 1, 1)
-  accurate_grad <- F; xi <- Apara;
+  accurate_grad <- FALSE
+  xi <- Apara
   aux_mat <- storeUpdates(para_dims, niter + 1, NA)
   grad <- storeUpdates(para_dims, niter + 1, NA)
   zMat <- storeUpdates(para_dims, niter + 1, variable_interest) # these are the ones being updated
@@ -196,11 +210,14 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
   temp <- list(par = samples, aux = aux_par, xi = xi, SS = SS, covPara = covPara)
   # SS_array <- array(NA, c(dim(SS)[1], dim(SS)[2], niter)) may need later
   acpt_ct <- 0
-  mis_res <- misIdx(dat);
+  mis_res <- misIdx(dat)
   dat <-  simpleImpute(dat)
-  fixcenter <- FALSE; dist <- NULL; cur_elbow <- 0
-  acpt_rate <- numeric(niter);
-  if (!is.null(mis_res)) {predictedY <- matrix(NA, nrow = floor(niter / 2), ncol = nrow(mis_res$misPos));
+  fixcenter <- FALSE
+  dist <- NULL
+  cur_elbow <- 0
+  acpt_rate <- numeric(niter)
+  if (!is.null(mis_res)) {
+    predictedY <- matrix(NA, nrow = floor(niter / 2), ncol = nrow(mis_res$misPos))
   impute_idx <- 1}
   else {predictedY <- NULL}
   upweight_idx <- NULL
@@ -208,7 +225,7 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
   #### sampling ####
   progress_bar <- utils::txtProgressBar(min=0, max=niter, style = 3, char="=")
   for (it in 2:(niter + 1)) {
-    initialization_period <- FALSE;
+    initialization_period <- FALSE
 
     ########## the code below is correct, but we don't need it now #######
     # if (it %% 100 == 0) {
@@ -249,7 +266,7 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
     if (!is.null(mis_res) && it > 100) {
       dat[mis_res$misPos] <- predictY(temp$par,
                                       prior_para$ltau,
-                                      dat[mis_res$na_yes,,drop = F],
+                                      dat[mis_res$na_yes,,drop = FALSE],
                                       mis_res$misIdx,
                                       mis_res$misPos_relative2Mis)
       if (it > (ceiling(niter / 2) + 1)) {
@@ -272,7 +289,7 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
       # phis <- updatePhi(prior_para$lkappa$a, lambda) # sum to 1 - keep it this way
       kappa <- updateKap(prior_para$lambda$a, phis, lambda) # positive - length = p
       phis <- updatePhi(prior_para$lambda$a, lambda) # sum to 1 - keep it this way
-      prior_para$lambda$phi <- phis;
+      prior_para$lambda$phi <- phis
       prior_para$lambda$kappa <- kappa
     }
     ########## experimental - bayesian-constrain-relaxation
@@ -304,13 +321,16 @@ gSGNHT_EG_sampling <- function(dat, latent_dim, variable_interest,
 #'
 #' @description
 #' `updateV_stepB` updates the step B in the sampling procedure of gSGNHT.
-#' See Algorithm 2 in the Appendix of \insertCite{liu16sgmcmc;textual}{ellipsoidgaussian}.
+#' See Algorithm 2 in the Appendix of Liu et al. (2016)
 #'
 #' @param epsilon The step size.
 #' @param xi XXX.
 #' @param v A list of the auxiliary parameters.
 #'
-#' @references \insertAllCited{}
+#' @references
+#' Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+#' methods. In Advances in Neural Information Processing Systems 29, pages
+#' 3009–3017.
 #' @returns A list of the updated auxiliary parameters.
 updateV_stepB <- function(epsilon, xi, v) {
   # v: a list of aux par
@@ -358,7 +378,7 @@ updateV_stepB_ctrlCov <- function(epsilon, xi, v, covContrlPar = NULL)  {
 #' @description
 #' `updateSample_gSGNHT` is the sampling procedure for one iteration of update
 #' in gSGNHT.
-#' See Algorithm 2 in the Appendix of  \insertCite{liu16sgmcmc;textual}{ellipsoidgaussian}
+#' See Algorithm 2 in the Appendix of Liu et al. (2016)
 #' for more details.
 #'
 #' @param all_theta A list of the parameter values
@@ -379,6 +399,11 @@ updateV_stepB_ctrlCov <- function(epsilon, xi, v, covContrlPar = NULL)  {
 #' @param SS The covariance matrix parameter used in [proposeSigTau_ram2()].
 #' @param iteration Total number of iterations.
 #' @param Lsteps Number of the repetition of the ABOBA steps. Default is 10.
+#'
+#' @references
+#' Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+#' methods. In Advances in Neural Information Processing Systems 29, pages
+#' 3009–3017.
 updateSample_gSGNHT <- function(all_theta, par_type, para_dims, para_dim_updated,
                                 aux_par, xi, dat, k,
                                 epsilon, Apara, prior_para, accurate_grad,
@@ -392,7 +417,8 @@ updateSample_gSGNHT <- function(all_theta, par_type, para_dims, para_dim_updated
   #  covCtrl <- T; covCtrlPar <- list(N = N, minibatchsize = minibatchSize, covPara = covPara)
 #  }
 #  else {
-    covCtrl <- FALSE; covCtrlPar <- NULL
+    covCtrl <- FALSE
+    covCtrlPar <- NULL
  # }
   ltau_ <- ifelse(prior_para$ltau$update, 'non','ltau')
   par_names <- setdiff(names(prior_para), ltau_)
@@ -452,10 +478,13 @@ updateSample_gSGNHT <- function(all_theta, par_type, para_dims, para_dim_updated
     #aux_par <- convtVec2List(par_idx[par_names], v)
     res <- updateSample_stepA(par_names, para_dim_updated,
                               par_type, all_theta, v, res$xi, epsilon / 2)
-    aux_par <- res$aux; all_theta[par_names2] <- res$par; xi <- res$xi # (possibly change) this line
+    aux_par <- res$aux
+    all_theta[par_names2] <- res$par
+    xi <- res$xi # (possibly change) this line
 
   }
-  res$par <- all_theta; res$grad <- v_list$grad # (possibly change) this line
+  res$par <- all_theta
+  res$grad <- v_list$grad # (possibly change) this line
   #cat('SG-tau', transformedTau2Tau(res$par$ltau,prior_para$ltau$lowerB, prior_para$ltau$upperB,
   #    prior_para$ltau$fac),' ')
   # add a transition kernel of ltau
@@ -484,10 +513,10 @@ updateSample_gSGNHT <- function(all_theta, par_type, para_dims, para_dim_updated
   if (!is.null(temp)) {
     if (update_ltau_linvSig == 2) {
 
-      res$par$ltau <- tau2transformedTau(temp$theta$ltau, prior_para$ltau);
+      res$par$ltau <- tau2transformedTau(temp$theta$ltau, prior_para$ltau)
     }
 
-    res$par$linvSig <- temp$theta$linvSig;
+    res$par$linvSig <- temp$theta$linvSig
     res$SS <- temp$SS
     res$accept_status <- temp$accept_status
   }
@@ -512,8 +541,8 @@ updateSample_gSGNHT <- function(all_theta, par_type, para_dims, para_dim_updated
 #'
 #' @description
 #' `updateV_step0_fast` updates the auxiliary parameter V in step O of the
-#' sampling procedure. See Algorithm 2 in the Appendix of
-#' \insertCite{liu16sgmcmc;textual}{ellipsoidgaussian} for more details.
+#' sampling procedure. See Algorithm 2 in the Appendix of Liu et al. (2016)
+#' for more details.
 #'
 #' @param dat The minibatch, a numerical matrix of n by p.
 #' @param para_dim Parameter dimensions.
@@ -521,7 +550,7 @@ updateSample_gSGNHT <- function(all_theta, par_type, para_dims, para_dim_updated
 #' @param par_notin_euclidean Parameters that are not in the Euclidean space,
 #' e.g. mu.
 #' @param all_theta A list of the parameter values.
-#' @param v The auxiliary paraemter.
+#' @param v The auxiliary parameter.
 #' @param epsilon The step size.
 #' @param Apara The scalar parameter.
 #' @param prior_para A list of the prior parameters.
@@ -530,6 +559,10 @@ updateSample_gSGNHT <- function(all_theta, par_type, para_dims, para_dim_updated
 #' @param initialization_period If NULL, then not initialization period.
 #'
 #' @returns A list of updated V and gradient
+#' @references
+#' Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+#' methods. In Advances in Neural Information Processing Systems 29, pages
+#' 3009–3017.
 updateV_stepO_fast <- function(dat,
                                para_dim,
                                k,
@@ -554,7 +587,7 @@ updateV_stepO_fast <- function(dat,
  # else {
     # warning!
     dUtilde <- calcSGgrad(all_theta, dat, k, prior_para, accurate_grad = accurate_grad,
-                          minibatchSize, initialization_period, prior_exclude = F)
+                          minibatchSize, initialization_period, prior_exclude = FALSE)
  # }
 
  # term1 <- if(controlVar) lapply(dUtilde$grad, '*', -epsilon) else
@@ -588,7 +621,7 @@ updateV_stepO_fast <- function(dat,
 #'
 #' @description
 #' `updateSample_stepA` updates the samples in step A of the gSGNHT sampling
-#' procedure in Algorithm 2  in the Appendix of \insertCite{liu16sgmcmc;textual}{ellipsoidgaussian}.
+#' procedure in Algorithm 2  in the Appendix of Liu et al. (2016).
 #'
 #' @param par_name parameter names
 #' @param para_dim parameter dimensions
@@ -598,14 +631,18 @@ updateV_stepO_fast <- function(dat,
 #' @param xi The thermostats parameter
 #' @param epsilon step size
 #'
+#' @references
+#' Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+#' methods. In Advances in Neural Information Processing Systems 29, pages
+#' 3009–3017.
 updateSample_stepA <- function(par_name,  para_dim,
                                par_type, all_theta,
                                aux_par, xi, epsilon) {
   # add an additional par that contains theta&aux_par-matrix form
   # para_dim <- sum(sapply(par_idx, length))
   #  aux_par_vec <- unlist(aux_par[names(par_idx)])
-  new_aux <- list();
-  new_theta <- list();
+  new_aux <- list()
+  new_theta <- list()
   for (i in seq_along(par_name)) {
     var_ <- par_name[i]
     # (CHANGE) add if to check whether it is U and S - if so, convert the dimesnioan and call geodesic!
@@ -687,11 +724,11 @@ compute_stiefel_flow <- function(X, V, h) {
     expm::expm(temp) %*%
     rbind(cbind(expm::expm(-h*A), Z), cbind(Z, expm::expm(-h*A)))
 
-  X <- X_V[,1:p, drop = F]
+  X <- X_V[,1:p, drop = FALSE]
   # browser(expr={any(is.nan(X))})
   svd_ <- svd(X)
   X <- X %*% svd_$v %*% diag(1 / (svd_$d)) %*% t(svd_$v)
-  V <- X_V[,(p+1):(2*p), drop = F]
+  V <- X_V[,(p+1):(2*p), drop = FALSE]
   #browser(expr={all(V == 0)})
   # if p is 1 we need to convert back to matrix
   list(theta =X, v =V)
@@ -831,7 +868,7 @@ randomDrift_fast <- function(Apara, epsilon, para_dim, Bmat = 0) {
     #  res[['ltau']] <- rnorm(1, mean = mean_, sd = sqrt(10) * std_)
   }
   else if (is.list(Bmat)) {
-    thres <- 2e-5;
+    thres <- 2e-5
     cov_ <- lapply(Bmat, function(x) {(2*Apara - epsilon * x) * epsilon})
     cov_ <- lapply(cov_, function(x) {x[x < 0] <- thres; return(x)})
     # print(cov_)
@@ -869,7 +906,7 @@ randomDrift_fast <- function(Apara, epsilon, para_dim, Bmat = 0) {
 #'
 findParDims <- function(para_names, variable_interest) {
   # variable_interest: a list
-  res <- lapply(variable_interest,dim);
+  res <- lapply(variable_interest,dim)
   discard_names <- setdiff(names(variable_interest),para_names)
   for(i in seq_along(res)) {
     if (is.null(res[[i]])) {
@@ -946,7 +983,7 @@ storeUpdates <- function(para_dims, niter, init_vals) {
 #' `extractSamples` extracts the \code{rowIdx} from \code{sampleList}.
 #'
 #' @param sampleList A list of samples
-#' @param rowIdx The row index of the elmements that we want to extract
+#' @param rowIdx The row index of the elements that we want to extract
 #'
 #' @returns A list of extract samples
 extractSamples <- function(sampleList, rowIdx) {
@@ -1060,7 +1097,7 @@ assignSamples <- function(sampleList, rowIdx, cur_sample, par_name) {
 #' Adaptive Metropolis update for the precision and tau.
 #'
 #' @description
-#' `proposeSigTau_ram2` uses adaptive Metropolis \insertCite{vihola12AM}{ellipsoidgaussian}
+#' `proposeSigTau_ram2` uses adaptive Metropolis (Vihola 2010)
 #' to update the noise variances and tau.
 #'
 #' @param all_theta A list of the parameters
@@ -1071,9 +1108,11 @@ assignSamples <- function(sampleList, rowIdx, cur_sample, par_name) {
 #' @param case If case is 2, both tau and variances are updated; if case is 1,
 #' only variances are updated. Otherwise, neither parameters are updated.
 #'
-#' @importFrom Rdpack reprompt
 #' @importFrom stats runif
 #' @importFrom stats rnorm
+#' @references
+#' Vihola, M. (2010). Robust adaptive Metropolis algorithm with coerced
+#' acceptance rate. Statistics and Computing, 22, 997-1008.
 proposeSigTau_ram2 <- function(all_theta, prior_para, iteration, SS, dat,case) {
   # based on the orignal Tau and linvSig -
   # warning: `it risks having tau going off the edge
@@ -1093,7 +1132,7 @@ proposeSigTau_ram2 <- function(all_theta, prior_para, iteration, SS, dat,case) {
     namess <- c('ltau','linvSig')
     cur_val <- all_theta[namess]
     cur_val$ltau <- transformedTau2Tau(all_theta$ltau, prior_para$ltau$lowerB, prior_para$ltau$upperB,
-                                       prior_para$ltau$fac); # original tau
+                                       prior_para$ltau$fac) # original tau
 
     # len <- length(cur_val)
     invalid_tau <- 1 # auto reject tau that is negative
@@ -1113,7 +1152,8 @@ proposeSigTau_ram2 <- function(all_theta, prior_para, iteration, SS, dat,case) {
     #this also includes pseudo-minidataset approach
 
     # log scale
-    var_cur <- exp(-all_theta$linvSig); var_prop <- exp(-theta_prop$linvSig);
+    var_cur <- exp(-all_theta$linvSig)
+    var_prop <- exp(-theta_prop$linvSig)
 
     post_prop <- dellipsoidgaussian_up2const_logged(dat,var_prop,
                                                     all_theta$lambda,
@@ -1136,10 +1176,11 @@ proposeSigTau_ram2 <- function(all_theta, prior_para, iteration, SS, dat,case) {
     theta_prop <- Map("+", cur_val, list(c(SS %*% u)))
     names(theta_prop) <- namess
     orig_tau <- transformedTau2Tau(all_theta$ltau, prior_para$ltau$lowerB, prior_para$ltau$upperB,
-                                   prior_para$ltau$fac); # original tau
+                                   prior_para$ltau$fac) # original tau
 
     # log scale
-    var_cur <- exp(-all_theta$linvSig); var_prop <- exp(-theta_prop$linvSig);
+    var_cur <- exp(-all_theta$linvSig)
+    var_prop <- exp(-theta_prop$linvSig)
 
     post_prop <- dellipsoidgaussian_up2const_logged(dat,var_prop,
                                                     all_theta$lambda,
@@ -1159,7 +1200,7 @@ proposeSigTau_ram2 <- function(all_theta, prior_para, iteration, SS, dat,case) {
 
     # print('accept')
   }
-  else { accept_status <- 0;
+  else { accept_status <- 0
   #print('reject')
   }
   # if(iteration <= n_burnin) {
@@ -1238,7 +1279,7 @@ logDensityTau_prior <- function(tau_prop, tau_prior) {
 #' @returns The total contribution from the prior on the logarithm scale.
 #' @importFrom stats dnorm
 logDensitylinvSig <- function(linvSig, asig) {
-  sum(stats::dnorm(exp(-linvSig), mean = 0, sd = asig, log = T) - linvSig)
+  sum(stats::dnorm(exp(-linvSig), mean = 0, sd = asig, log = TRUE) - linvSig)
 }
 
 
@@ -1251,13 +1292,16 @@ logDensitylinvSig <- function(linvSig, asig) {
 #' @param dat a numeric matrix, data.
 #'
 misIdx <- function(dat) {
-  na_yes <- apply(dat, 1, anyNA);
+  na_yes <- apply(dat, 1, anyNA)
   if(sum(na_yes)) {
     misPos <- which(is.na(dat), arr.ind=TRUE)
-    misPos_relative2MisPart <- which(is.na(dat[na_yes,,drop = F]), arr.ind = T)
+    misPos_relative2MisPart <- which(is.na(dat[na_yes,,drop = FALSE]),
+                                     arr.ind = TRUE)
     missing_idx <- as.data.frame(misPos_relative2MisPart) # missing idx relative to the subset of the data that contains missingness
-    m <- reshape2::melt(missing_idx, id.var = c("row")); missing_idx <- reshape2::dcast(m, row ~ value, fill = 0);
-    res <- as.list(apply(missing_idx[,-1,drop = F],1,function(x) setdiff(x, 0)))
+    m <- reshape2::melt(missing_idx, id.var = c("row"))
+    missing_idx <- reshape2::dcast(m, row ~ value, fill = 0)
+    res <- as.list(apply(missing_idx[,-1,drop = FALSE],1,
+                         function(x) setdiff(x, 0)))
     # names(res) <- missing_idx$row
     return(list(misPos = misPos, misPos_relative2Mis = misPos_relative2MisPart, misIdx = res, na_yes = na_yes))
   }
@@ -1273,7 +1317,7 @@ misIdx <- function(dat) {
 #'
 #' @returns Imputed data, a numerical matrix of p by k.
 simpleImpute <- function(dat) {
-  imputed <- mice::mice(dat, m = 1,printFlag = F);
-  dat_new <- as.matrix(mice::complete(imputed,1));
+  imputed <- mice::mice(dat, m = 1,printFlag = FALSE)
+  dat_new <- as.matrix(mice::complete(imputed,1))
   return(dat_new)
 }

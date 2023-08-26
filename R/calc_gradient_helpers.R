@@ -11,11 +11,16 @@
 #' @param ord_eigVal XXX
 #' @param order_  The order of saddlepoint approximation, 1: first-order, 2:
 #' second-order first version, 3: second-order second version. Default is 3 for
-#' better accuracy. See \insertCite{KumeWood05}{ellipsoidgaussian}
-#' P975 for more details.
+#' better accuracy. See Kume and Wood (2005) P975 for more details.
 #'
 #' @importFrom numDeriv grad
 #' @importFrom matrixcalc vech
+#'
+#' @references
+#' Kume, A., & Wood, A. T. A. (2005). Saddlepoint Approximations for the
+#' Bingham and Fisher-Bingham Normalising Constants. Biometrika, 92(2), 465–476.
+#'http://www.jstor.org/stable/20441200
+
 calclogPseudoconst_VecParGrad_fast <- function(vec_par,
                                                eigVals,
                                                eigVecs,
@@ -33,7 +38,7 @@ calclogPseudoconst_VecParGrad_fast <- function(vec_par,
 ######################3
   Vec <- Vec[ord_eigVal]
  # res <- findFBconst(Vec, eigVals,order_, ordered = T)
-  res <- findFBconst_cpp(Vec, eigVals,order_, ordered = T)
+  res <- findFBconst_cpp(Vec, eigVals,order_, ordered = TRUE)
  # res <- res[order_]
   return(res)
 }
@@ -56,7 +61,7 @@ calclogPseudoconst_VecParGrad_fast <- function(vec_par,
 #'
 #' @returns The log-likelihood derivative w.r.t tau
 calc_transTau_grad <- function(tau, vec_grad_sum, mu, tauBounds) {
-  grad_tau <- sum(vec_grad_sum * mu);
+  grad_tau <- sum(vec_grad_sum * mu)
   # change more
   if (is.null(tauBounds$upperB)) {
     return(logTransGradAdjust(tau, grad_tau, lowerB = tauBounds$lowerB))
@@ -79,19 +84,27 @@ calc_transTau_grad <- function(tau, vec_grad_sum, mu, tauBounds) {
 #' pseudo-normalising constant
 #' @param ord The order of saddlepoint approximation, 1: first-order, 2:
 #' second-order first version, 3: second-order second version. Default is 3 for
-#' better accuracy. See \insertCite{KumeWood05}{ellipsoidgaussian}
+#' better accuracy. See Kume and Wood (2005) for more details.
 #' @param keyword 'Richardson' or 'simple', the method used for gradient
 #' approximation.
 #'
 #' @returns The gradient w.r.t. the first parameter in the pseudo-normalising
 #' constant.
+#'
+#' @references
+#' Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+#' and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+#' 465–76. http://www.jstor.org/stable/20441200.
 calcVecGrad_all <- function(para1, ord_eigVals, eigVecs, ord, keyword) {
   # k by minibatch size
 vec_grad <- apply(para1, 2,
                   function(y) numDeriv::grad(function(par)
-                    {calclogPseudoconst_VecParGrad_fast(par,ord_eigVals, eigVecs,ord)},
-                                             y, method = keyword))
-return(vec_grad);
+                    {calclogPseudoconst_VecParGrad_fast(par,
+                                                        ord_eigVals,
+                                                        eigVecs,ord)},
+                    y,
+                    method = keyword))
+return(vec_grad)
 
 }
 
@@ -167,7 +180,8 @@ dlogDtauDlogit_dlogit <- function(logit_val) {
 #'
 #' @returns A vector of gradient
 calcHalfNormalPriorGrad <- function(linvSigma, logInv, asig, mean = 0) {
-  #calcHalfNormalPriorGrad is gradien w.r.t linvSigma, where sigma^2 \sim halfnormal(mean, asig^2)
+  #calcHalfNormalPriorGrad is gradien w.r.t linvSigma, where sigma^2
+  #\sim halfnormal(mean, asig^2)
   # warning: have not verified
   if (logInv) {
     sign <- -1
@@ -253,7 +267,7 @@ approxDeriTransformedTau <- function(transformedPara, lowerB, upperB, minibatchS
   # target var = temp * fac
   res <- numDeriv::grad(function(par) {
     x <- transformedTau2Tau(par, lowerB, upperB, fac)
-    calclogC_up2const(x, k, logged = F)},
+    calclogC_up2const(x, k, logged = FALSE)},
     transformedPara, method = 'Richardson')
   res <- res * minibatchSize
   return(res)
@@ -271,7 +285,7 @@ approxDeriTransformedTau <- function(transformedPara, lowerB, upperB, minibatchS
 approxDeriltau <- function(ltau, minibatchSize,k) {
   # the current version does not allow for using a lowerB
   # check old code for the older version
-  res <- numDeriv::grad(function(par) {calclogC_up2const(par, k, logged = T)},
+  res <- numDeriv::grad(function(par) {calclogC_up2const(par, k, logged = TRUE)},
                         ltau, method = 'Richardson')
   #
   res <- res * minibatchSize

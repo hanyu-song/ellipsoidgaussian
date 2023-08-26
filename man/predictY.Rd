@@ -2,7 +2,7 @@
 % Please edit documentation in R/sample_latent_factor.R
 \name{predictY}
 \alias{predictY}
-\title{Impute the mising values}
+\title{Impute the missing values}
 \usage{
 predictY(temp, tau_par, dat, missing_idx, mis_pos)
 }

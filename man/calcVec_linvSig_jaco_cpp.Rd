@@ -17,5 +17,5 @@ calcVec_linvSig_jaco_cpp(invSig, vec_grad, lambda, centered_sdat)
 }
 \description{
 \code{calcVec_linvSig_jaco_cpp} calculates the Jacobian of the pseudo-normalising constant
-w.r.t. \code{invSig} through change in the vector paraemter.
+w.r.t. \code{invSig} through change in the vector parameter.
 }

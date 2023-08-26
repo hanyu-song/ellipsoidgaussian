@@ -48,7 +48,7 @@ arma::vec logTransGradAdjust_cpp(const arma::vec& invSig, const arma::vec& invSi
 //' w.r.t. \code{invSig} through change in the positive semi-definite matrix parameter.
 //'
 //' @param invSig A numeric vector, the precision parameters.
-//' @param psdMat_grad The jacobian w.r.t. the positive semi-definite matrix.
+//' @param psdMat_grad The Jacobian w.r.t. the positive semi-definite matrix.
 //' @param lambda A numeric matrix of p by k, the factor loading matrix.
 //[[Rcpp::export]]
 arma::vec calcPsdMat_linvSig_jaco_cpp(const arma::vec& invSig,
@@ -73,7 +73,7 @@ arma::vec calcPsdMat_linvSig_jaco_cpp(const arma::vec& invSig,
 //'
 //' @description
 //' `calcVec_linvSig_jaco_cpp` calculates the Jacobian of the pseudo-normalising constant
-//' w.r.t. \code{invSig} through change in the vector paraemter.
+//' w.r.t. \code{invSig} through change in the vector parameter.
 //'
 //' @param invSig A numeric vector the precision parameters.
 //' @param vec_grad The gradient of the pseudo-normalising constant w.r.t. the vector.

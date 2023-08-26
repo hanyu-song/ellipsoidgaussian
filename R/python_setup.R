@@ -1,7 +1,7 @@
-#'  global reference to scipy
+#'  global reference to ctef
 #'
-#'  @description
-#'  `ctef` will be initialized in .onLoad.
+#'@description
+#'`ctef` will be initialized in .onLoad.
 #'
 ctef <- NULL
 

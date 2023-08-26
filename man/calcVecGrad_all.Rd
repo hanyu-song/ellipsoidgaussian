@@ -17,7 +17,7 @@ pseudo-normalising constant}
 
 \item{ord}{The order of saddlepoint approximation, 1: first-order, 2:
 second-order first version, 3: second-order second version. Default is 3 for
-better accuracy. See \insertCite{KumeWood05}{ellipsoidgaussian}}
+better accuracy. See Kume and Wood (2005) for more details.}
 
 \item{keyword}{'Richardson' or 'simple', the method used for gradient
 approximation.}
@@ -29,4 +29,9 @@ constant.
 \description{
 \code{calcVecGrad_all} calculates the gradient w.r.t. the first parameter in the
 pseudo-normalising constant for all the data in the minibatch.
+}
+\references{
+Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+465–76. http://www.jstor.org/stable/20441200.
 }

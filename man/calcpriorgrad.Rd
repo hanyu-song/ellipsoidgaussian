@@ -7,7 +7,7 @@
 calcpriorgrad(theta1, p, k, prior_para)
 }
 \arguments{
-\item{theta1}{A list of the parameter values, ordere by their names}
+\item{theta1}{A list of the parameter values, ordered by their names}
 
 \item{p}{The ambient dimension}
 

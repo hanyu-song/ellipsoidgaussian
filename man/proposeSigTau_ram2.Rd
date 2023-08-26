@@ -21,6 +21,10 @@ proposeSigTau_ram2(all_theta, prior_para, iteration, SS, dat, case)
 only variances are updated. Otherwise, neither parameters are updated.}
 }
 \description{
-\code{proposeSigTau_ram2} uses adaptive Metropolis \insertCite{vihola12AM}{ellipsoidgaussian}
+\code{proposeSigTau_ram2} uses adaptive Metropolis (Vihola 2010)
 to update the noise variances and tau.
+}
+\references{
+Vihola, M. (2010). Robust adaptive Metropolis algorithm with coerced
+acceptance rate. Statistics and Computing, 22, 997-1008.
 }

@@ -1,10 +1,6 @@
-bibentry(
-  bibtype  = "Manual",
-  title    = "ellipsoidgaussian: Fit an ellipsoid-Gaussian distribution",
-  author   = "Hanyu Song",
-  year     = "2023",
-  note = "R package version 1.0.0",
-)
+bibentry("Manual",
+         other = unlist(citation(auto = meta), recursive = FALSE))
+
 bibentry(
   bibtype = "Manual",
   title = "Curved factor analysis with the Ellipsoid-Gaussian distribution",

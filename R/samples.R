@@ -14,7 +14,7 @@
 #'  samples, p, k).}
 #'  \item{mu}{A matrix of samples of mu, number of samples by k.}
 #'  \item{axesLen}{A matrix of samples of axes lengths, number of samples by k.}
-#'  \item{lambda}{An arary of samples of factor loadings, dim = (number of samples, p,k).}
+#'  \item{lambda}{An array of samples of factor loadings, dim = (number of samples, p,k).}
 #'  \item{center}{A matrix of samples of the center, number of samples by p.}
 #'  \item{tau}{A matrix of samples of tau, number of samples by 1.}
 #'  \item{invsig}{A matrix of samples of the noise precisions, number of samples by p.}

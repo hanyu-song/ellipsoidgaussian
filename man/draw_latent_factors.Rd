@@ -17,12 +17,15 @@ draw_latent_factors(dat, samples, burnin = NULL)
 \code{draw_latent_factors} simulates \eqn{\min(500,
 \text{number of post burn-in samples})} latent factors for each observation from
 their posterior distribution, a Fisher-Bingham distribution. Simulating from
-a Fisher-Bingham is challenging and we use  \insertCite{Hoff09FB}{ellipsoidgaussian}.
+a Fisher-Bingham is challenging and we use the method by Hoff (2009).
 }
 \examples{
 lat_facs <- draw_latent_factors(shell, samples, burnin = 2500)
 
 }
 \references{
-\insertAllCited{}
+Peter D. Hoff (2009) Simulation of the Matrix Bingham–von Mises–Fisher
+Distribution, With Applications to Multivariate and Relational Data,
+Journal of Computational and Graphical Statistics, 18:2, 438-456,
+DOI: 10.1198/jcgs.2009.07177
 }

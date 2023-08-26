@@ -21,8 +21,8 @@ double calcloglaplaceDeri_cpp(const double& var,
 //' prior w.r.t. Lambda,  a factor loading matrix.
 //'
 //' @param Lambda A numeric matrix, the factor loading matrix.
-//' @param phi A prior parameter in the Dirichlet-laplace prior.
-//' @param kappa A prior parameter in the Dirichlet-Lapalce prior.
+//' @param phi A prior parameter in the Dirichlet-Laplace prior.
+//' @param kappa A prior parameter in the Dirichlet-Laplace prior.
 //'
 //[[Rcpp::export]]
 std::vector<double> calcgradLambdaprior_cpp(const arma::mat& Lambda,

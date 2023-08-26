@@ -54,7 +54,8 @@ pairsPlot_onedata <- function(dat_new,  rotate_x_text = FALSE) {
   q <- GGally::ggpairs(df, columns = 1:num,ggplot2::aes(alpha = 0.5),
                #  upper = list(continuous = wrap(cor_func,
                #     method = 'spearman')),
-               upper = list(continuous = GGally::wrap(cor_func,method = 'spearman', symbol = '\u03C1 =')),
+               upper = list(continuous =
+                              GGally::wrap(cor_func,method = 'spearman', symbol = '\u03C1 =')),
                #     upper = list(continuous = ggally_density, combo = ggally_box_no_facet),
                #   lower = list(continuous = wrap('points',size = 0.3)),
                lower = list(continuous = myscatter),

@@ -15,8 +15,11 @@ rFB_MH(eta1, para1, A)
 }
 \description{
 \code{rFB_MH} simulates from a Fisher-Bingham distribution using
-\insertCite{Hoff09FB}{ellipsoidgaussian}.
+Hoff (2009).
 }
 \references{
-\insertAllCited{}
+Peter D. Hoff (2009) Simulation of the Matrix Bingham–von Mises–Fisher
+Distribution, With Applications to Multivariate and Relational Data,
+Journal of Computational and Graphical Statistics, 18:2, 438-456,
+DOI: 10.1198/jcgs.2009.07177
 }

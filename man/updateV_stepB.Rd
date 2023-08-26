@@ -18,8 +18,10 @@ A list of the updated auxiliary parameters.
 }
 \description{
 \code{updateV_stepB} updates the step B in the sampling procedure of gSGNHT.
-See Algorithm 2 in the Appendix of \insertCite{liu16sgmcmc;textual}{ellipsoidgaussian}.
+See Algorithm 2 in the Appendix of Liu et al. (2016)
 }
 \references{
-\insertAllCited{}
+Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
+methods. In Advances in Neural Information Processing Systems 29, pages
+3009–3017.
 }

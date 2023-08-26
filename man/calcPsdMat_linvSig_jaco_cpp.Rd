@@ -9,7 +9,7 @@ calcPsdMat_linvSig_jaco_cpp(invSig, psdMat_grad, lambda)
 \arguments{
 \item{invSig}{A numeric vector, the precision parameters.}
 
-\item{psdMat_grad}{The jacobian w.r.t. the positive semi-definite matrix.}
+\item{psdMat_grad}{The Jacobian w.r.t. the positive semi-definite matrix.}
 
 \item{lambda}{A numeric matrix of p by k, the factor loading matrix.}
 }

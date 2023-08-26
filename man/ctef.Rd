@@ -3,15 +3,14 @@
 \docType{data}
 \name{ctef}
 \alias{ctef}
-\title{global reference to scipy}
+\title{global reference to ctef}
 \format{
-An object of class \code{python.builtin.module} (inherits from \code{python.builtin.object}) of length 1.
+An object of class \code{python.builtin.module} (inherits from \code{python.builtin.object}) of length 0.
 }
 \usage{
 ctef
 }
 \description{
-@description
 \code{ctef} will be initialized in .onLoad.
 }
 \keyword{datasets}
