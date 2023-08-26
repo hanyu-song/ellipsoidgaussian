@@ -334,6 +334,8 @@ plot_factor_loadings <- function(lambda_samples, row_idx = NULL) {
   if (is.null(row_idx)) {
     row_idx <- 1:nrow(lambda_samples[[1]])
   }
-  p1 <- infinitefactor::plotmat(infinitefactor::lmean(lambda_samples)[row_idx,])
+  mat <- infinitefactor::lmean(lambda_samples)[row_idx,]
+  p1 <- infinitefactor::plotmat(mat)
   return(p1)
 }
+

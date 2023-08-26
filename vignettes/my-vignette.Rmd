@@ -14,7 +14,8 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE
 )
 ```
 
@@ -138,17 +139,28 @@ pairsPlot(scale(mussels), ppd)
 
 ##### Postprocessing the factor loadings 
 
+Factor loadings are unidentifiable in a factor model. We perform the varimax rotation on the factor loadings samples to resolve rotational ambiguity. See 
+
+```{r}
+help(jointRot, package = "infinitefactor")
+```
+
+for more information. Run `postprocess()` for post processing of the factor loadings and the latent factors jointly. 
 ```{r post process the factor loadings}
 aligned <- postprocess(scale(mussels), samples, burnin = 2500)
 ```
+
+Then we visualize the posterior mean of the post-processed factor loadings for interpretation.
 
 ```{r plot the factor loadings}
 p1 <- plot_factor_loadings(lambda_samples = aligned$lambda, row_idx = 1:4) 
 print(p1)
 ```
 
+This suggests that the shell size, as measured by an average of height, length and width, is a good indicator of the muscle mass. 
+
 If you find bugs or want to suggest new features please visit the
 **ellipsoidgaussian** [GitHub issues
 page](https://github.com/hanyu-song/ellipsoidgaussian/issues).
 
-##### Reference
+##### References
