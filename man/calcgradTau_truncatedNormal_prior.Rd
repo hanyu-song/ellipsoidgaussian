@@ -15,7 +15,7 @@ calcgradTau_truncatedNormal_prior(ltau, prior_par)
 \description{
 \code{calcgradTau_truncatedNormal_prior} calculates derivative w.r.t the function of tau,
 that is actually being updated in the sampler, with tau following a truncated
-normal prior \eqn{\text{N}(\text{mean}, \text{sd}^2)\mathbm{1}(l,u).}
+normal prior \eqn{\text{N}(\text{mean}, \text{sd}^2)\mathbb{I}(l,u).}
 }
 \details{
 The parameter that is being updated in the sampler is

@@ -10,7 +10,7 @@
 #' @param vec A numeric vector.
 #'
 lowerTriOuterProduct_cpp <- function(vec) {
-    .Call('_ellipsoidgaussian_lowerTriOuterProduct_cpp', PACKAGE = 'ellipsoidgaussian', vec)
+    .Call(`_ellipsoidgaussian_lowerTriOuterProduct_cpp`, vec)
 }
 
 #' Gradient change due to log transformation
@@ -22,7 +22,7 @@ lowerTriOuterProduct_cpp <- function(vec) {
 #' @param invSig_jaco The associated Jacobian.
 #'
 logTransGradAdjust_cpp <- function(invSig, invSig_jaco) {
-    .Call('_ellipsoidgaussian_logTransGradAdjust_cpp', PACKAGE = 'ellipsoidgaussian', invSig, invSig_jaco)
+    .Call(`_ellipsoidgaussian_logTransGradAdjust_cpp`, invSig, invSig_jaco)
 }
 
 #' Gradient for the precision parameters
@@ -35,7 +35,7 @@ logTransGradAdjust_cpp <- function(invSig, invSig_jaco) {
 #' @param psdMat_grad The Jacobian w.r.t. the positive semi-definite matrix.
 #' @param lambda A numeric matrix of p by k, the factor loading matrix.
 calcPsdMat_linvSig_jaco_cpp <- function(invSig, psdMat_grad, lambda) {
-    .Call('_ellipsoidgaussian_calcPsdMat_linvSig_jaco_cpp', PACKAGE = 'ellipsoidgaussian', invSig, psdMat_grad, lambda)
+    .Call(`_ellipsoidgaussian_calcPsdMat_linvSig_jaco_cpp`, invSig, psdMat_grad, lambda)
 }
 
 #' Gradient for the precision parameters
@@ -50,7 +50,7 @@ calcPsdMat_linvSig_jaco_cpp <- function(invSig, psdMat_grad, lambda) {
 #' @param centered_sdat A numeric matrix, centered minibatch.
 #'
 calcVec_linvSig_jaco_cpp <- function(invSig, vec_grad, lambda, centered_sdat) {
-    .Call('_ellipsoidgaussian_calcVec_linvSig_jaco_cpp', PACKAGE = 'ellipsoidgaussian', invSig, vec_grad, lambda, centered_sdat)
+    .Call(`_ellipsoidgaussian_calcVec_linvSig_jaco_cpp`, invSig, vec_grad, lambda, centered_sdat)
 }
 
 #' Gradient for the precision parameters
@@ -68,7 +68,7 @@ calcVec_linvSig_jaco_cpp <- function(invSig, vec_grad, lambda, centered_sdat) {
 #' @param centered_sdat A numeric matrix, centered minibatch data.
 #'
 calc_linvSig_grad_cpp <- function(invSig, psdMat_grad, vec_grad, lambda, centered_sdat) {
-    .Call('_ellipsoidgaussian_calc_linvSig_grad_cpp', PACKAGE = 'ellipsoidgaussian', invSig, psdMat_grad, vec_grad, lambda, centered_sdat)
+    .Call(`_ellipsoidgaussian_calc_linvSig_grad_cpp`, invSig, psdMat_grad, vec_grad, lambda, centered_sdat)
 }
 
 #' Gradient for the factor loadings
@@ -82,7 +82,7 @@ calc_linvSig_grad_cpp <- function(invSig, psdMat_grad, vec_grad, lambda, centere
 #' @param invSigma A vector, the precisions.
 #'
 calc_lambda_grad_MatPart2_cpp <- function(lambda, psdMat_grad, invSigma) {
-    .Call('_ellipsoidgaussian_calc_lambda_grad_MatPart2_cpp', PACKAGE = 'ellipsoidgaussian', lambda, psdMat_grad, invSigma)
+    .Call(`_ellipsoidgaussian_calc_lambda_grad_MatPart2_cpp`, lambda, psdMat_grad, invSigma)
 }
 
 #' Gradient for the factor loadings
@@ -98,7 +98,7 @@ calc_lambda_grad_MatPart2_cpp <- function(lambda, psdMat_grad, invSigma) {
 #' w.r.t. the vector parameter.
 #'
 calc_lambda_grad_VecPart_cpp <- function(invSigma, centered_sdat, vec_grad) {
-    .Call('_ellipsoidgaussian_calc_lambda_grad_VecPart_cpp', PACKAGE = 'ellipsoidgaussian', invSigma, centered_sdat, vec_grad)
+    .Call(`_ellipsoidgaussian_calc_lambda_grad_VecPart_cpp`, invSigma, centered_sdat, vec_grad)
 }
 
 #' Gradient of the log-likelihood w.r.t. lambda
@@ -116,7 +116,7 @@ calc_lambda_grad_VecPart_cpp <- function(invSigma, centered_sdat, vec_grad) {
 #' @param centered_sdat A matrix of centered mini-batch data, n by p.
 #'
 calc_lambda_grad_cpp <- function(lambda, psdMat_grad, vec_grad, invSigma, centered_sdat) {
-    .Call('_ellipsoidgaussian_calc_lambda_grad_cpp', PACKAGE = 'ellipsoidgaussian', lambda, psdMat_grad, vec_grad, invSigma, centered_sdat)
+    .Call(`_ellipsoidgaussian_calc_lambda_grad_cpp`, lambda, psdMat_grad, vec_grad, invSigma, centered_sdat)
 }
 
 #' Matrix multiplication
@@ -128,7 +128,7 @@ calc_lambda_grad_cpp <- function(lambda, psdMat_grad, vec_grad, invSigma, center
 #' @param B a matrix
 #'
 armaMatMult <- function(A, B) {
-    .Call('_ellipsoidgaussian_armaMatMult', PACKAGE = 'ellipsoidgaussian', A, B)
+    .Call(`_ellipsoidgaussian_armaMatMult`, A, B)
 }
 
 #' Matrix multiplication
@@ -140,7 +140,7 @@ armaMatMult <- function(A, B) {
 #' @param B a matrix
 #'
 eigenMatMult <- function(A, B) {
-    .Call('_ellipsoidgaussian_eigenMatMult', PACKAGE = 'ellipsoidgaussian', A, B)
+    .Call(`_ellipsoidgaussian_eigenMatMult`, A, B)
 }
 
 #' Matrix multiplication
@@ -152,7 +152,7 @@ eigenMatMult <- function(A, B) {
 #' @param B a matrix
 #'
 eigenMapMatMult <- function(A, B) {
-    .Call('_ellipsoidgaussian_eigenMapMatMult', PACKAGE = 'ellipsoidgaussian', A, B)
+    .Call(`_ellipsoidgaussian_eigenMapMatMult`, A, B)
 }
 
 #' Prior gradient of Lambda
@@ -166,7 +166,7 @@ eigenMapMatMult <- function(A, B) {
 #' @param kappa A prior parameter in the Dirichlet-Laplace prior.
 #'
 calcgradLambdaprior_cpp <- function(Lambda, phi, kappa) {
-    .Call('_ellipsoidgaussian_calcgradLambdaprior_cpp', PACKAGE = 'ellipsoidgaussian', Lambda, phi, kappa)
+    .Call(`_ellipsoidgaussian_calcgradLambdaprior_cpp`, Lambda, phi, kappa)
 }
 
 #' The rotation from a to b.
@@ -177,16 +177,19 @@ calcgradLambdaprior_cpp <- function(Lambda, phi, kappa) {
 #' @param a A vector of length n.
 #' @param b A vector of length n.
 rotate_cpp <- function(a, b) {
-    .Call('_ellipsoidgaussian_rotate_cpp', PACKAGE = 'ellipsoidgaussian', a, b)
+    .Call(`_ellipsoidgaussian_rotate_cpp`, a, b)
 }
 
 #' Helper function for evaluating the pseudo-normalising constant
 #'
 #' @description
 #' `kfb_cpp` is a helper function for evaluating the pseudo-normalising constant.
-#' See \insertCite{KumeWood05}{ellipsoidgaussian} for more details.
+#' See Kume and Wood (2005) for more details.
 #'
-#' @references \insertAllCited{}
+#' @references
+#' Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+#' and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+#' 465–76. http://www.jstor.org/stable/20441200.
 #'
 #' @param j The power
 #' @param gam Gamma.
@@ -194,22 +197,25 @@ rotate_cpp <- function(a, b) {
 #' @param ta t.
 #'
 kfb_cpp <- function(j, gam, lam, ta) {
-    .Call('_ellipsoidgaussian_kfb_cpp', PACKAGE = 'ellipsoidgaussian', j, gam, lam, ta)
+    .Call(`_ellipsoidgaussian_kfb_cpp`, j, gam, lam, ta)
 }
 
 #' Find saddle point
 #' @description
 #' `saddle_equat_cpp` is a helper function for evaluating the pseudo-normalising constant.
-#' See \insertCite{KumeWood05}{ellipsoidgaussian} for more details.
+#' See Kume and Wood (2005) for more details.
 #'
-#' @references \insertAllCited{}
+#' @references
+#' Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+#' and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+#' 465–76. http://www.jstor.org/stable/20441200.
 #'
 #' @param ta t.
 #' @param gam Gamma.
 #' @param lam Lambda.
 #'
 saddle_equat_cpp <- function(ta, gam, lam) {
-    .Call('_ellipsoidgaussian_saddle_equat_cpp', PACKAGE = 'ellipsoidgaussian', ta, gam, lam)
+    .Call(`_ellipsoidgaussian_saddle_equat_cpp`, ta, gam, lam)
 }
 
 #' Reorder vector
@@ -221,7 +227,7 @@ saddle_equat_cpp <- function(ta, gam, lam) {
 #' @param idx A vector of indices.
 #'
 reorder_vec <- function(v, idx) {
-    .Call('_ellipsoidgaussian_reorder_vec', PACKAGE = 'ellipsoidgaussian', v, idx)
+    .Call(`_ellipsoidgaussian_reorder_vec`, v, idx)
 }
 
 #' Find the root to the saddle point equation.
@@ -235,7 +241,7 @@ reorder_vec <- function(v, idx) {
 #' @param up The upper bound of the solution.
 #'
 root4SaddleEquat <- function(gam, lam, low, up) {
-    .Call('_ellipsoidgaussian_root4SaddleEquat', PACKAGE = 'ellipsoidgaussian', gam, lam, low, up)
+    .Call(`_ellipsoidgaussian_root4SaddleEquat`, gam, lam, low, up)
 }
 
 #' Fisher-Bingham normalising constant
@@ -251,23 +257,26 @@ root4SaddleEquat <- function(gam, lam, low, up) {
 #' @param ordered Whether gam or lam is ordered.
 #'
 findFBconst_cpp <- function(gam, lam, which_, ordered) {
-    .Call('_ellipsoidgaussian_findFBconst_cpp', PACKAGE = 'ellipsoidgaussian', gam, lam, which_, ordered)
+    .Call(`_ellipsoidgaussian_findFBconst_cpp`, gam, lam, which_, ordered)
 }
 
 #' Fisher-Bingham normalising constant
 #'
 #' @description
 #' `approxFBconst_cpp` approximates the normalising constant in the Fisher-Bingham
-#' distribution using saddlepoint approximation \insertCite{KumeWood05}{ellipsoidgaussian}.
+#' distribution using saddlepoint approximation (Kume and Wood 2005)
 #'
 #' @param para1 The vector parameter, length is k.
 #' @param para2 The matrix parameter, k by k.
 #' @param idx_ The order of approximation,1: First order; 2: second order first
 #' type; 3: second order second type.
 #'
-#' @references \insertAllCited{}
+#' @references
+#'  Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+#'  and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+#'  465–76. http://www.jstor.org/stable/20441200.
 approxFBconst_cpp <- function(para1, para2, idx_) {
-    .Call('_ellipsoidgaussian_approxFBconst_cpp', PACKAGE = 'ellipsoidgaussian', para1, para2, idx_)
+    .Call(`_ellipsoidgaussian_approxFBconst_cpp`, para1, para2, idx_)
 }
 
 #' Convert a vech format to a matrix
@@ -281,7 +290,7 @@ approxFBconst_cpp <- function(para1, para2, idx_) {
 #' @param para2_vech A vector obtained through vech operation.
 #'
 Vech2Mat_cpp <- function(para2_vech) {
-    .Call('_ellipsoidgaussian_Vech2Mat_cpp', PACKAGE = 'ellipsoidgaussian', para2_vech)
+    .Call(`_ellipsoidgaussian_Vech2Mat_cpp`, para2_vech)
 }
 
 #' Gradient w.r.t. the matrix parameter in the pseudo-normalising constant
@@ -295,6 +304,6 @@ Vech2Mat_cpp <- function(para2_vech) {
 #' @param para1 A vector, the vector parameter in the pseudo-normalising constant.
 #'
 calclogPseudoconst_MatParGrad4_cpp <- function(para2_vech, para1) {
-    .Call('_ellipsoidgaussian_calclogPseudoconst_MatParGrad4_cpp', PACKAGE = 'ellipsoidgaussian', para2_vech, para1)
+    .Call(`_ellipsoidgaussian_calclogPseudoconst_MatParGrad4_cpp`, para2_vech, para1)
 }
 

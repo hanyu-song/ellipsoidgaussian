@@ -4,7 +4,7 @@
 \alias{postprocess}
 \title{Post-process the factor loadings}
 \usage{
-postprocess(dat, samples, burnin = NULL)
+postprocess(dat, samples, burnin = NULL, num_samps = 200)
 }
 \arguments{
 \item{dat}{A matrix of data, n by p.}
@@ -13,6 +13,8 @@ postprocess(dat, samples, burnin = NULL)
 \code{\link[=ellipsoid_gaussian]{ellipsoid_gaussian()}}.}
 
 \item{burnin}{Number of burn-in samples.}
+
+\item{num_samps}{Number of samples for each latent factor}
 }
 \description{
 \code{postprocess} post process the samples of the factor loadings to resolve
@@ -21,6 +23,6 @@ and column-based matching to resolve sign and label switching; see the help page
 \code{\link[infinitefactor:jointRot]{infinitefactor::jointRot()}} for more details.
 }
 \examples{
-aligned <- postprocess(shell, samples, burnin = 2500)
+aligned <- postprocess(shell, samples, burnin = 2500, num_samps = 10)
 
 }

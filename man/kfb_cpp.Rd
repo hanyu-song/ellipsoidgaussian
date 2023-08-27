@@ -17,8 +17,10 @@ kfb_cpp(j, gam, lam, ta)
 }
 \description{
 \code{kfb_cpp} is a helper function for evaluating the pseudo-normalising constant.
-See \insertCite{KumeWood05}{ellipsoidgaussian} for more details.
+See Kume and Wood (2005) for more details.
 }
 \references{
-\insertAllCited{}
+Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+465–76. http://www.jstor.org/stable/20441200.
 }

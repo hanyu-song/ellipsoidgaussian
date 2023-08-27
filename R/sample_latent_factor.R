@@ -224,7 +224,7 @@ dFB_cpp_log <- function(X,para1, para2, fb_const_part) {
 #' @param dat A matrix of data, n by p.
 #' @param samples A list of posterior samples, output of [ellipsoid_gaussian()].
 #' @param burnin Number of burn-in samples.
-#'
+#' @param num_samp Number of samples for each latent factor.
 #' @export
 #' @references
 #' Peter D. Hoff (2009) Simulation of the Matrix Bingham–von Mises–Fisher
@@ -233,16 +233,16 @@ dFB_cpp_log <- function(X,para1, para2, fb_const_part) {
 #' DOI: 10.1198/jcgs.2009.07177
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @examples
-#' lat_facs <- draw_latent_factors(shell, samples, burnin = 2500)
+#' lat_facs <- draw_latent_factors(shell, samples, burnin = 2500, num_samp = 10)
 #'
-draw_latent_factors <- function(dat, samples, burnin = NULL) {
+draw_latent_factors <- function(dat, samples, burnin = NULL, num_samp = 200) {
   #  res <- matrix(NA, 1000, nrow(dat))
 
   if (is.null(burnin)) {
     burnin <- nrow(samples$tau) / 2
   }
   niter <- nrow(samples$tau) - burnin + 1
-  num_samp <- min(500, niter)
+  num_samp <- min(num_samp, niter)
   idx <- sample((burnin + 1):nrow(samples$tau), num_samp)
   iterations <- numeric(num_samp)
   lat_facs <- array(NA, c(nrow(dat), dim(samples$lambda)[3], num_samp))
@@ -260,7 +260,7 @@ draw_latent_factors <- function(dat, samples, burnin = NULL) {
     #print(temp$acpt_rate)
     #  res[i,] <- temp$y
     #  cat('iteration',i,'completed.\n')
-    utils::setTxtProgressBar(progress_bar, value = i - 1)
+    utils::setTxtProgressBar(progress_bar, value = i)
   }
   close(progress_bar)
 
@@ -312,12 +312,13 @@ joint_rot_samples <- function(lambda_samps, lat_facs, iterations) {
 #' @param samples A list of samples from the posterior distribution, output of
 #' [ellipsoid_gaussian()].
 #' @param burnin Number of burn-in samples.
+#' @param num_samps Number of samples for each latent factor
 #' @export
 #' @examples
-#' aligned <- postprocess(shell, samples, burnin = 2500)
+#' aligned <- postprocess(shell, samples, burnin = 2500, num_samps = 10)
 #'
-postprocess <- function(dat, samples, burnin = NULL) {
-  lat_facs <- draw_latent_factors(dat, samples, burnin)
+postprocess <- function(dat, samples, burnin = NULL, num_samps = 200) {
+  lat_facs <- draw_latent_factors(dat, samples, burnin, num_samp = num_samps)
   res <- joint_rot_samples(samples$lambda, lat_facs$lat_facs, lat_facs$iterations)
   return(res)
 }

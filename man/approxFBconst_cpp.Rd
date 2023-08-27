@@ -16,8 +16,10 @@ type; 3: second order second type.}
 }
 \description{
 \code{approxFBconst_cpp} approximates the normalising constant in the Fisher-Bingham
-distribution using saddlepoint approximation \insertCite{KumeWood05}{ellipsoidgaussian}.
+distribution using saddlepoint approximation (Kume and Wood 2005)
 }
 \references{
-\insertAllCited{}
+Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+465–76. http://www.jstor.org/stable/20441200.
 }

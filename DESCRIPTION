@@ -1,10 +1,10 @@
 Type: Package
 Package: ellipsoidgaussian
-Title: Fit an ellipsoid-Gaussian model
+Title: Fit an Ellipsoid-Gaussian Model
 Version: 1.0.0
 Author: Hanyu Song
 Maintainer: Hanyu Song <songhanyu1211@gmail.com>
-Description: The package provides Bayesian estimation of the
+Description: Provides Bayesian estimation of the
     ellipsoid-Gaussian model introduced by Song and Dunson (2022).  The
     ellipsoid-Gaussian distribution can be used for modeling data distributed
     around a hyper-ellipsoid. It is induced when we use a Gaussian linear
@@ -30,7 +30,6 @@ Imports:
     ramcmc,
     Rcpp
         (>= 1.0.11),
-    Rdpack,
     reshape2,
     reticulate,
     Rfast,
@@ -51,8 +50,6 @@ LinkingTo:
     RcppEigen
 VignetteBuilder: 
     knitr
-RdMacros: 
-    Rdpack
 Config/reticulate: list( packages = list(list(package = "ctef") ) )
 Config/testthat/edition: 3
 Encoding: UTF-8

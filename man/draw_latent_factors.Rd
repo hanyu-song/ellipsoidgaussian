@@ -4,7 +4,7 @@
 \alias{draw_latent_factors}
 \title{Sample latent factors}
 \usage{
-draw_latent_factors(dat, samples, burnin = NULL)
+draw_latent_factors(dat, samples, burnin = NULL, num_samp = 200)
 }
 \arguments{
 \item{dat}{A matrix of data, n by p.}
@@ -12,6 +12,8 @@ draw_latent_factors(dat, samples, burnin = NULL)
 \item{samples}{A list of posterior samples, output of \code{\link[=ellipsoid_gaussian]{ellipsoid_gaussian()}}.}
 
 \item{burnin}{Number of burn-in samples.}
+
+\item{num_samp}{Number of samples for each latent factor.}
 }
 \description{
 \code{draw_latent_factors} simulates \eqn{\min(500,
@@ -20,7 +22,7 @@ their posterior distribution, a Fisher-Bingham distribution. Simulating from
 a Fisher-Bingham is challenging and we use the method by Hoff (2009).
 }
 \examples{
-lat_facs <- draw_latent_factors(shell, samples, burnin = 2500)
+lat_facs <- draw_latent_factors(shell, samples, burnin = 2500, num_samp = 10)
 
 }
 \references{

@@ -24,9 +24,12 @@ private:
 //'
 //' @description
 //' `kfb_cpp` is a helper function for evaluating the pseudo-normalising constant.
-//' See \insertCite{KumeWood05}{ellipsoidgaussian} for more details.
+//' See Kume and Wood (2005) for more details.
 //'
-//' @references \insertAllCited{}
+//' @references
+//' Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+//' and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+//' 465–76. http://www.jstor.org/stable/20441200.
 //'
 //' @param j The power
 //' @param gam Gamma.
@@ -53,9 +56,12 @@ double kfb_cpp(const unsigned& j, const arma::vec& gam, const arma::vec& lam, do
 //' Find saddle point
 //' @description
 //' `saddle_equat_cpp` is a helper function for evaluating the pseudo-normalising constant.
-//' See \insertCite{KumeWood05}{ellipsoidgaussian} for more details.
+//' See Kume and Wood (2005) for more details.
 //'
-//' @references \insertAllCited{}
+//' @references
+//' Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+//' and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+//' 465–76. http://www.jstor.org/stable/20441200.
 //'
 //' @param ta t.
 //' @param gam Gamma.
@@ -190,14 +196,17 @@ double findFBconst_cpp(arma::vec& gam, arma::vec& lam, const arma::uword& which_
 //'
 //' @description
 //' `approxFBconst_cpp` approximates the normalising constant in the Fisher-Bingham
-//' distribution using saddlepoint approximation \insertCite{KumeWood05}{ellipsoidgaussian}.
+//' distribution using saddlepoint approximation (Kume and Wood 2005)
 //'
 //' @param para1 The vector parameter, length is k.
 //' @param para2 The matrix parameter, k by k.
 //' @param idx_ The order of approximation,1: First order; 2: second order first
 //' type; 3: second order second type.
 //'
-//' @references \insertAllCited{}
+//' @references
+//'  Kume, A., and Andrew T. A. Wood. “Saddlepoint Approximations for the Bingham
+//'  and Fisher-Bingham Normalising Constants.” Biometrika 92, no. 2 (2005):
+//'  465–76. http://www.jstor.org/stable/20441200.
 //[[Rcpp::export]]
 arma::vec approxFBconst_cpp(const arma::mat& para1, const arma::mat& para2,
                      const arma::uword& idx_) {

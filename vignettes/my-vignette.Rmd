@@ -79,12 +79,13 @@ reticulate::py_module_available('ctef')
 
 One can simulate data from an ellipsoid-Gaussian distribution using the `rellipsoidgaussian()` function, specifying the sample size n and the parameters $c$ (center), $\Lambda$ (Lambda), $\mu$ (mu), $\tau$ (tau) and $\Sigma$ (Sigma), e.g.
 ```{r generate from EG}
-dat <- rellipsoidgaussian(n = 1000, 
+  dat <- rellipsoidgaussian(n = 1000, 
                           center = rep(0,3), 
-                          Lambda = matrix(rnorm(6, mean = -5, sd = 2),nrow = 3, ncol = 2), 
+                        Lambda = matrix(rnorm(6, mean = -5, sd = 2),nrow = 3, ncol = 2),
                           mu = c(0,1), 
                           tau = 1, 
                           Sigma = diag(0.5,3))
+
 ```
 
 The shell data included in the package is an example data set simulated from the model. In this vignette, we use the horse mussels data. You can load the data via
@@ -113,28 +114,36 @@ pairsPlot_onedata(scale(mussels))
 Taking a Bayesian approach, we propose a hybrid of geodesic stochastic gradient Nosé-Hoover Thermostats (gSGNHT) [@liu16sgmcmc] and adaptive Metropolis [@vihola12AM] for posterior sampling. The prior distribution is specified on the help page of `gen_input_eg()`. The initial values of the parameters are produced by `gen_input_eg()` using  @melikechi2023ellipsoid. `ellipsoid_gaussian()` automates the model fitting process by first generating the initial values and then sampling from the posterior distribution. It also allows the option to update or not update the center $c$ during the sampling process. When the center is not updated, it is fixed at the initial value. Users can also specify the algorithm-specific parameters, including the minibatch size,the step size, and the scalar parameter, all of which are tuning parameters for the gSGNHT algorithm; see @liu16sgmcmc for more details. The default values for these parameters are 50, $10^{-4}$ and 0.1. Other parameters that require user input are `k` (The number of latent dimensions), `scale_col` (Whether each variable should be scaled to have mean 0 and variance 1) and `niter` (total number of iterations for the sampling process). The output are saved in a list, with samples associated with each parameter saved as an element in the list.
 
 ```{r fit the model}
-samples <- ellipsoid_gaussian(dat = mussels, 
-                          k = 3, 
-                          scale_col = FALSE, 
-                          updateCenter = TRUE, 
-                          niter = 5000)
+if (reticulate::py_module_available('ctef')) {
+  samples <- ellipsoid_gaussian(dat = mussels,
+                                k = 3, 
+                                scale_col = FALSE, 
+                                updateCenter = TRUE, 
+                                niter = 5000)
+}
 ```
 
 ##### Generating posterior predictive samples
 We can generate posterior predictive samples using the output from ``ellipsoid_gaussian``.
 
 ```{r generate posterior predictive}
-ppd <- gen_posterior_predictive(n = 200, samples = samples, burnin = 2500)
+if (reticulate::py_module_available('ctef')) {
+  ppd <- gen_posterior_predictive(n = 200, samples = samples, burnin = 2500)
+}
 ```
 
 ##### Visualizing ellipsoid-Gaussian results
 We can both visualize the posterior predictive samples alone and visualize the samples with the original data set in juxtaposition. To visualize just the posterior predictive samples, we run
 ```{r visualize result 1}
-pairsPlot_onedata(ppd)
+if (reticulate::py_module_available('ctef')) {
+  pairsPlot_onedata(ppd)
+}
 ```
 To visualize the two data sets in juxtaposition, we run
 ```{r visualize results}
-pairsPlot(scale(mussels), ppd)
+if (reticulate::py_module_available('ctef')) {
+  pairsPlot(scale(mussels), ppd)
+} 
 ```
 
 ##### Postprocessing the factor loadings 
@@ -147,14 +156,19 @@ help(jointRot, package = "infinitefactor")
 
 for more information. Run `postprocess()` for post processing of the factor loadings and the latent factors jointly. 
 ```{r post process the factor loadings}
-aligned <- postprocess(scale(mussels), samples, burnin = 2500)
+if (reticulate::py_module_available('ctef')) {
+  aligned <- postprocess(scale(mussels), samples, burnin = 2500)
+}
 ```
 
 Then we visualize the posterior mean of the post-processed factor loadings for interpretation.
 
 ```{r plot the factor loadings}
-p1 <- plot_factor_loadings(lambda_samples = aligned$lambda, row_idx = 1:4) 
-print(p1)
+if (reticulate::py_module_available('ctef')) {
+  p1 <- plot_factor_loadings(lambda_samples = aligned$lambda, row_idx = 1:4) 
+  print(p1)
+}
+
 ```
 
 This suggests that the shell size, as measured by an average of height, length and width, is a good indicator of the muscle mass. 
