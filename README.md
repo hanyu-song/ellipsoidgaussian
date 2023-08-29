@@ -1,4 +1,4 @@
-#### ellipsoidgaussian
+##### ellipsoidgaussian
  Provides Bayesian estimation of the ellipsoid-Gaussian model
     introduced by Song and Dunson (2022). The model was inspired by the
     need for new models for characterizing dependence in multivariate
