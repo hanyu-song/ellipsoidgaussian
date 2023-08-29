@@ -4,14 +4,22 @@ Title: Fit an Ellipsoid-Gaussian Model
 Version: 1.0.0
 Author: Hanyu Song
 Maintainer: Hanyu Song <songhanyu1211@gmail.com>
-Description: Provides Bayesian estimation of the
-    ellipsoid-Gaussian model introduced by Song and Dunson (2022).  The
-    ellipsoid-Gaussian distribution can be used for modeling data distributed
-    around a hyper-ellipsoid. It is induced when we use a Gaussian linear
-    factor model with latent variables following a von Mises-Fisher
-    distribution and have the latent variables integrated out. We also provide options
-    for generating samples from the posterior predictive distribution,
-    code for post-processing results. Some plotting functions are also included.
+Description: Provides Bayesian estimation of the ellipsoid-Gaussian model
+    introduced by Song and Dunson (2022). The model was inspired by the
+    need for new models for characterizing dependence in multivariate
+    data. The multivariate Gaussian distribution is routinely used, but
+    cannot characterize nonlinear relationships in the data. Most
+    non-linear extensions tend to be highly complex; for example,
+    involving estimation of a non-linear regression model in latent
+    variables. The relatively simple class of ellipsoid-Gaussian
+    multivariate distributions, which are derived by using a Gaussian
+    linear factor model involving latent variables having a von
+    Mises-Fisher distribution on a unit hyper-sphere, can be used for
+    modeling data distributed around a hyper-ellipsoid. In addition to
+    fitting the model, the package also provides options for
+    post-processing the posterior samples and generating samples from the
+    posterior predictive distribution. Plotting functions are also
+    included.
 License: MIT + file LICENSE
 Depends: 
     R (>= 3.5.0)
