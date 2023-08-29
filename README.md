@@ -17,3 +17,9 @@
     post-processing the posterior samples and generating samples from the
     posterior predictive distribution. Plotting functions are also
     included.
+
+## Installation
+Install the development version from Github via 
+```
+devtools::install_github('hanyu-song/ellipsoidgaussian')
+```
