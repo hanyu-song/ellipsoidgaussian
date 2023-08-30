@@ -59,9 +59,9 @@ denotes the modified Bessel function of the first kind of order \eqn{v}, with re
 We call this distribution the Ellipsoid-Gaussian (EG).
 }
 \examples{
-if (reticulate::py_module_available('ctef')) {
+\dontshow{if (reticulate::py_module_available('ctef')) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
   res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 100)
-}
+\dontshow{\}) # examplesIf}
 }
 \references{
 Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC

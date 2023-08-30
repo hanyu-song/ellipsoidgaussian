@@ -22,7 +22,7 @@ their posterior distribution, a Fisher-Bingham distribution. Simulating from
 a Fisher-Bingham is challenging and we use the method by Hoff (2009).
 }
 \examples{
-lat_facs <- draw_latent_factors(shell, samples, burnin = 2500, num_samp = 10)
+lat_facs <- draw_latent_factors(shell, samples, burnin = 2500, num_samp = 5)
 
 }
 \references{

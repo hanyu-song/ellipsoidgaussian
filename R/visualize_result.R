@@ -117,7 +117,7 @@ pairsPlot <- function(dat_orig, dat_new) {
                                                         fill = .data$type,alpha = 0.5),
                #  upper = list(continuous = wrap(cor_func,
                #     method = 'spearman')),
-               upper = list(continuous = mycorrelations),
+               upper = list(continuous = suppressWarnings(mycorrelations)),
          #     upper = list(continuous = wrap("cor", title = '\u03C1')),
        #    upper = list(continuous = wrap(cor_func,
                          #         method = 'spearman', symbol = '\u03C1 =')),
@@ -198,8 +198,7 @@ mycorrelations <- function(data,mapping,...){
   data2$x <- as.numeric(data[,dplyr::as_label(mapping$x)])
   data2$y <- as.numeric(data[,dplyr::as_label(mapping$y)])
   data2$group <- data[,dplyr::as_label(mapping$colour)]
-
-  correlation_df <- data2 %>%
+  correlation_df <- suppressWarnings(data2 %>%
     dplyr::bind_rows(data2 %>% dplyr::mutate(group="Overall Corr")) %>%
     dplyr::group_by(.data$group) %>%
     dplyr::filter(sum(!is.na(.data$x),na.rm=TRUE)>1) %>%
@@ -212,9 +211,11 @@ mycorrelations <- function(data,mapping,...){
                                             #    symbols = c("***", "**", "*", "'", " "))))%>%
     dplyr::group_by() %>%
     dplyr::mutate(group = factor(.data$group, levels=c(as.character(unique(sort(data[,dplyr::as_label(mapping$colour)]))), "Overall Corr")))
+)
   correlation_df <- correlation_df %>% dplyr::filter(!.data$group %in% 'Overall Corr')
   ggplot2::ggplot(data=correlation_df, ggplot2::aes(x=1,y=.data$group,color=.data$group))+
     ggplot2::geom_text(ggplot2::aes(label=paste0(.data$group,": ",.data$estimate)), size = 6) + ggplot2::theme_classic()
+
 }
 
 #' Scatter plots for the GGally::ggpairs plot

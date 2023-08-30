@@ -116,8 +116,8 @@ Taking a Bayesian approach, we propose a hybrid of geodesic stochastic gradient 
 ```{r fit the model}
 if (reticulate::py_module_available('ctef')) {
   samples <- ellipsoid_gaussian(dat = mussels,
-                                k = 3, 
-                                scale_col = FALSE, 
+                                k = 2, 
+                                scale_col = TRUE, 
                                 updateCenter = TRUE, 
                                 niter = 5000)
 }

@@ -83,9 +83,9 @@ we favor a fit with small noise.
 Results are generally not sensitive to the choice of the prior parameters.
 }
 \examples{
-if (reticulate::py_module_available('ctef')) {
-  gen_input_eg(shell, k = 3, TRUE)
-}
+\dontshow{if (reticulate::py_module_available('ctef')) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+gen_input_eg(shell, k = 3, TRUE)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley

@@ -1,0 +1,123 @@
+---
+output: github_document
+bibliography: inst/REFERENCES.bib
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ellipsoidgaussian
+
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/ellipsoidgaussian)](https://CRAN.R-project.org/package=ellipsoidgaussian)
+[![R-CMD-check](https://github.com/hanyu-song/ellipsoidgaussian/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hanyu-song/ellipsoidgaussian/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+## Description 
+The package provides Bayesian estimation of the ellipsoid-Gaussian model
+    introduced by @song2022curved. The model was inspired by the
+    need for new models for characterizing dependence in multivariate
+    data. The multivariate Gaussian distribution is routinely used, but
+    cannot characterize nonlinear relationships in the data. Most
+    non-linear extensions tend to be highly complex; for example,
+    involving estimation of a non-linear regression model in latent
+    variables. The relatively simple class of ellipsoid-Gaussian
+    multivariate distributions, which are derived by using a Gaussian
+    linear factor model involving latent variables having a von
+    Mises-Fisher distribution on a unit hyper-sphere, can be used for
+    modeling data distributed around a hyper-ellipsoid. In addition to
+    fitting the model, the package also provides options for
+    post-processing the posterior samples and generating samples from the
+    posterior predictive distribution. Plotting functions are also
+    included.
+
+## Installation
+
+You can install the development version of ellipsoidgaussian from [GitHub](https://github.com/) with:
+
+```{r, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("hanyu-song/ellipsoidgaussian")
+```
+
+The package uses Cayley transform ellipsoid fitting [@melikechi2023ellipsoid]
+for initial values of the parameters in the model, which depends on 
+[the Python module ctef](https://github.com/omelikechi/ctef). The module is NOT 
+automatically installed when the package is installed. To install the module,
+follow the instruction on the [GitHub page](https://github.com/omelikechi/ctef).
+Make sure the module is installed in the path as the Python used in R; run
+``` r
+reticulate::py_config()
+```
+to see the path to Python.
+
+## Example
+
+```{r example}
+library(ellipsoidgaussian)
+```
+Here we demonstrate the usage of the package using the included horse mussels 
+data; more details can be found in the vignette.
+
+Use the help function to learn about the data set:
+
+```{r help}
+help(mussels)
+```
+
+
+To visualize the data, do 
+
+```{r visualize}
+pairsPlot_onedata(scale(mussels))
+```
+
+To fit an ellipsoid-Gaussian model, run
+```{r fit the model}
+samples <- ellipsoid_gaussian(dat = mussels,
+                                k = 2, 
+                                scale_col = TRUE, 
+                                updateCenter = TRUE, 
+                                niter = 5000)
+```
+
+Then we can generate posterior predictive samples using
+```{r generate posterior predictive}
+  ppd <- gen_posterior_predictive(n = 200, samples = samples, burnin = 2500)
+```
+
+We can also visualize the posterior predictive samples in juxatoposition with the original data using
+
+```{r visualize results}
+  pairsPlot(scale(mussels), ppd)
+```
+
+
+Factor loadings are unidentifiable in a factor model. To post process the samples, 
+run
+```{r post process the factor loadings}
+  aligned <- postprocess(scale(mussels), samples, burnin = 2500)
+
+```
+
+After post-processing the samples, visualize the posterior mean of the factor loadings for interpretation.
+
+```{r plot the factor loadings}
+  plot_factor_loadings(lambda_samples = aligned$lambda, row_idx = 1:4) 
+```
+This suggests that the shell size, as measured by an average of height, length and width, is a good indicator of the muscle mass. 
+
+If you find bugs or want to suggest new features please visit the
+**ellipsoidgaussian** [GitHub issues
+page](https://github.com/hanyu-song/ellipsoidgaussian/issues).
+
+## References
+

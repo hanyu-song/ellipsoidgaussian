@@ -36,11 +36,11 @@ likelihood using geodesic Stochastic Gradient Nose-Hoover Thermostats (gSGNHT)
 (Liu et al. 2016)
 }
 \examples{
-  if (reticulate::py_module_available('ctef')) {
+\dontshow{if (reticulate::py_module_available('ctef')) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
  parList <- gen_input_eg(shell,k = 3, updateCenter = TRUE)
  res <- gSGNHT_EG(shell, parList$k, parList$init, parList$prior_par,
                  parList$alg_par, 100, parList$updateCenter)
-                 }
+\dontshow{\}) # examplesIf}
 }
 \references{
 Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
