@@ -63,10 +63,8 @@
 #' Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley
 #' transform. arXiv Preprint. arXiv:2304.10630.
 #'
-#' @examples
-#' if (reticulate::py_module_available('ctef')) {
-#'   gen_input_eg(shell, k = 3, TRUE)
-#' }
+#' @examplesIf reticulate::py_module_available('ctef')
+#' gen_input_eg(shell, k = 3, TRUE)
 gen_input_eg <- function(dat,
                          k,
                          updateCenter,
@@ -209,10 +207,8 @@ init_CTEF <- function(dat,noise_var,k,ordered) {
 #' Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley
 #' transform. arXiv Preprint. arXiv:2304.10630.
 #'
-#' @examples
-#'  if (reticulate::py_module_available('ctef')) {
+#' @examplesIf reticulate::py_module_available('ctef')
 #' fit_ellipsoid_r(shell, 3)
-#' }
 fit_ellipsoid_r <- function(X, k) {
   # X: data (matrix)
   # k: projection to what dimension of space?

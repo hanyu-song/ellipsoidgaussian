@@ -19,9 +19,9 @@ The parameters of the fitted ellipsoid.
 using Cayley transform ellipsoid fitting (CTEF) (Melikechi and Dunson 2023).
 }
 \examples{
- if (reticulate::py_module_available('ctef')) {
+\dontshow{if (reticulate::py_module_available('ctef')) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 fit_ellipsoid_r(shell, 3)
-}
+\dontshow{\}) # examplesIf}
 }
 \references{
 Melikechi, O. and Dunson, D. B. (2023). Ellipsoid fitting with the cayley

@@ -29,12 +29,10 @@
 #' @importFrom mice mice complete
 #' @importFrom ramcmc adapt_S
 #' @importFrom stats rgamma
-#' @examples
-#'   if (reticulate::py_module_available('ctef')) {
+#' @examplesIf reticulate::py_module_available('ctef')
 #'  parList <- gen_input_eg(shell,k = 3, updateCenter = TRUE)
 #'  res <- gSGNHT_EG(shell, parList$k, parList$init, parList$prior_par,
 #'                  parList$alg_par, 100, parList$updateCenter)
-#'                  }
 #' @references
 #' Liu, C., Zhu, J., and Song, Y. (2016). Stochastic gradient geodesic MCMC
 #' methods. In Advances in Neural Information Processing Systems 29, pages
