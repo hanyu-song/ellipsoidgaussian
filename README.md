@@ -101,48 +101,6 @@ with the original data using
 
 ``` r
   pairsPlot(scale(mussels), ppd)
-#> Warning: There were 2 warnings in `dplyr::summarize()`.
-#> The first warning was:
-#> ℹ In argument: `estimate = round(...)`.
-#> ℹ In group 1: `group = "Overall Corr"`.
-#> Caused by warning in `cor.test.default()`:
-#> ! Cannot compute exact p-value with ties
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
-#> There were 2 warnings in `dplyr::summarize()`.
-#> The first warning was:
-#> ℹ In argument: `estimate = round(...)`.
-#> ℹ In group 1: `group = "Overall Corr"`.
-#> Caused by warning in `cor.test.default()`:
-#> ! Cannot compute exact p-value with ties
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
-#> There were 2 warnings in `dplyr::summarize()`.
-#> The first warning was:
-#> ℹ In argument: `estimate = round(...)`.
-#> ℹ In group 1: `group = "Overall Corr"`.
-#> Caused by warning in `cor.test.default()`:
-#> ! Cannot compute exact p-value with ties
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
-#> There were 2 warnings in `dplyr::summarize()`.
-#> The first warning was:
-#> ℹ In argument: `estimate = round(...)`.
-#> ℹ In group 1: `group = "Overall Corr"`.
-#> Caused by warning in `cor.test.default()`:
-#> ! Cannot compute exact p-value with ties
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
-#> There were 2 warnings in `dplyr::summarize()`.
-#> The first warning was:
-#> ℹ In argument: `estimate = round(...)`.
-#> ℹ In group 1: `group = "Overall Corr"`.
-#> Caused by warning in `cor.test.default()`:
-#> ! Cannot compute exact p-value with ties
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
-#> There were 2 warnings in `dplyr::summarize()`.
-#> The first warning was:
-#> ℹ In argument: `estimate = round(...)`.
-#> ℹ In group 1: `group = "Overall Corr"`.
-#> Caused by warning in `cor.test.default()`:
-#> ! Cannot compute exact p-value with ties
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
 ```
 
 <img src="man/figures/README-visualize results-1.png" width="100%" />
