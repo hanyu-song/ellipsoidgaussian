@@ -277,6 +277,8 @@ mydensity <- function(data, mapping, ...) {
 #'
 #' @param lambda_samples A list of the samples, length = number of samples,
 #' each element is p by k.
+#' @param variable_names A vector of strings, length = p, variable names. Default
+#' is NULL, meaning unspecified.
 #' @param row_idx A vector row indices of the factor loadings to be plotted. Default
 #' is all the rows are included.
 #' @param saveDir A string, the path to where the image should be saved. Default
@@ -287,17 +289,26 @@ mydensity <- function(data, mapping, ...) {
 #' @examples
 #' lambda_samples <- list(a = matrix(rnorm(6),3,2), b = matrix(rnorm(6),3,2))
 #' plot_factor_loadings(lambda_samples = lambda_samples)
-plot_factor_loadings <- function(lambda_samples, row_idx = NULL, saveDir = NULL) {
+plot_factor_loadings <- function(lambda_samples,
+                                 variable_names = NULL,
+                                 row_idx = NULL,
+                                 saveDir = NULL) {
   if (!requireNamespace("infinitefactor", quietly = TRUE)) {
     stop(
       "Package \"infinitefactor\" must be installed to use this function.",
       call. = FALSE
     )
   }
+  if (!is.null(variable_names)) {
+    stopifnot(nrow(lambda_samples[[1]]) == length(variable_names))
+  }
+
   if (is.null(row_idx)) {
     row_idx <- seq_len(nrow(lambda_samples[[1]]))
   }
+
   mat <- infinitefactor::lmean(lambda_samples)[row_idx,]
+  rownames(mat) <- variable_names[row_idx]
   p1 <- plotmat(mat = mat, saveDir = saveDir)
   return(p1)
 }

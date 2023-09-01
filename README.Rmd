@@ -113,7 +113,9 @@ run
 After post-processing the samples, visualize the posterior mean of the factor loadings for interpretation.
 
 ```{r plot the factor loadings}
-  plot_factor_loadings(lambda_samples = aligned$lambda, row_idx = 1:4) 
+  plot_factor_loadings(lambda_samples = aligned$lambda, 
+                       variable_names = names(mussels),
+                       row_idx = 1:4) 
 ```
 This suggests that the shell size, as measured by an average of height, length and width, is a good indicator of the muscle mass. 
 

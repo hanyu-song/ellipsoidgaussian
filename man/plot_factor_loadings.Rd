@@ -4,11 +4,19 @@
 \alias{plot_factor_loadings}
 \title{Visualize the factor loadings}
 \usage{
-plot_factor_loadings(lambda_samples, row_idx = NULL, saveDir = NULL)
+plot_factor_loadings(
+  lambda_samples,
+  variable_names = NULL,
+  row_idx = NULL,
+  saveDir = NULL
+)
 }
 \arguments{
 \item{lambda_samples}{A list of the samples, length = number of samples,
 each element is p by k.}
+
+\item{variable_names}{A vector of strings, length = p, variable names. Default
+is NULL, meaning unspecified.}
 
 \item{row_idx}{A vector row indices of the factor loadings to be plotted. Default
 is all the rows are included.}

@@ -117,7 +117,9 @@ After post-processing the samples, visualize the posterior mean of the
 factor loadings for interpretation.
 
 ``` r
-  plot_factor_loadings(lambda_samples = aligned$lambda, row_idx = 1:4) 
+  plot_factor_loadings(lambda_samples = aligned$lambda, 
+                       variable_names = names(mussels),
+                       row_idx = 1:4) 
 ```
 
 <img src="man/figures/README-plot the factor loadings-1.png" width="100%" />
