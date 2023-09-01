@@ -322,30 +322,3 @@ postprocess <- function(dat, samples, burnin = NULL, num_samps = 200) {
   res <- joint_rot_samples(samples$lambda, lat_facs$lat_facs, lat_facs$iterations)
   return(res)
 }
-#' Visualize the factor loadings
-#'
-#' @description
-#' `plot_factor_loadings` visualizes the posterior mean of the factor loadings matrix. We
-#' recommend post processing the samples first using [draw_latent_factors()] and
-#' [postprocess()].
-#'
-#' @param lambda_samples A list of the samples, length = number of samples,
-#' each element is p by k.
-#' @param row_idx A vector row indices of the factor loadings to be plotted. Default
-#' is all the rows are included.
-#' @export
-plot_factor_loadings <- function(lambda_samples, row_idx = NULL) {
-  if (!requireNamespace("infinitefactor", quietly = TRUE)) {
-    stop(
-      "Package \"infinitefactor\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-  if (is.null(row_idx)) {
-    row_idx <- seq_len(nrow(lambda_samples[[1]]))
-  }
-  mat <- infinitefactor::lmean(lambda_samples)[row_idx,]
-  p1 <- infinitefactor::plotmat(mat)
-  return(p1)
-}
-

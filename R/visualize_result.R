@@ -266,3 +266,108 @@ mydensity <- function(data, mapping, ...) {
     ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n=3)) + ggplot2::theme_minimal()
 
 }
+
+#' Visualize the factor loadings
+#'
+#' @description
+#' `plot_factor_loadings` visualizes the posterior mean of the factor loadings matrix. We
+#' recommend post processing the samples first using [draw_latent_factors()] and
+#' [postprocess()]. The function uses (post-processed) samples of factor loadings
+#' directly.
+#'
+#' @param lambda_samples A list of the samples, length = number of samples,
+#' each element is p by k.
+#' @param row_idx A vector row indices of the factor loadings to be plotted. Default
+#' is all the rows are included.
+#' @param saveDir A string, the path to where the image should be saved. Default
+#' is NULL, meaning the image is not saved. When the image is saved, its name is
+#' loadings.pdf.
+#' @export
+#'
+#' @examples
+#' lambda_samples <- list(a = matrix(rnorm(6),3,2), b = matrix(rnorm(6),3,2))
+#' plot_factor_loadings(lambda_samples = lambda_samples)
+plot_factor_loadings <- function(lambda_samples, row_idx = NULL, saveDir = NULL) {
+  if (!requireNamespace("infinitefactor", quietly = TRUE)) {
+    stop(
+      "Package \"infinitefactor\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  if (is.null(row_idx)) {
+    row_idx <- seq_len(nrow(lambda_samples[[1]]))
+  }
+  mat <- infinitefactor::lmean(lambda_samples)[row_idx,]
+  p1 <- plotmat(mat = mat, saveDir = saveDir)
+  return(p1)
+}
+
+
+#' Visualize the factor loadings
+#'
+#' @description
+#' `plotmat` builds on the function [infinitefactor::plotmat()] and includes
+#' additional features, including an option to save the figure and automatic
+#' inclusion of the variable names in the plot.
+#'
+#' @param mat A matrix of numeric values.
+#' @param color The color scheme of the plot, "green", "red" or "wes".
+#' @param title A string, optional plot title.
+#' @param args Optional additional ggplots arguments
+#' @param saveDir The path to where the image is saved. Default is NULL, meaning
+#' the figure is not saved. When it is saved, it is named as loadings.pdf.
+#'
+#' @export
+#'
+#' @examples
+#' mat <- matrix(rnorm(6), 3, 2)
+#' plotmat(mat = mat)
+#'
+plotmat <- function (mat,
+                     color = "green",
+                     title = NULL,
+                     args = NULL,
+                     saveDir = NULL){
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop(
+      "Package \"ggplot2\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  mat = apply(mat, 2, rev)
+  longmat = melt(mat)
+  Var1 = Var2 = value = NULL
+  p = ggplot2::ggplot(longmat, ggplot2::aes(x = Var2, y = Var1)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = value),colour = "grey20")
+  if (color == "green")
+    p = p + ggplot2::scale_fill_gradient2(low = "#3d52bf", high = "#33961b",
+                                 mid = "white")
+  if (color == "red")
+    p = p + ggplot2::scale_fill_gradient2(low = "#191970", high = "#800000",
+                                 mid = "white")
+  if (color == "wes")
+    p = p + ggplot2::scale_fill_gradient2(low = "#046C9A", high = "#D69C4E",
+                                 mid = "white")
+  p = p + ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+                         axis.title.y = ggplot2::element_blank(),
+                         panel.grid.major = ggplot2::element_blank(),
+                         panel.border = ggplot2::element_blank(),
+                         panel.background = ggplot2::element_blank(),
+                         axis.ticks = ggplot2::element_blank(),
+                         axis.text.x = ggplot2::element_blank(),
+                         legend.title = ggplot2::element_text(),
+                         plot.title = ggplot2::element_text(hjust = 0.5),
+                         axis.text.y = ggplot2::element_text(angle = 60)) +
+    ggplot2::labs(fill = " ")
+  if (!is.null(title))
+    p = p + ggplot2::ggtitle(title)
+  if (!is.null(args))
+    p = p + args
+  if (!is.null(saveDir)) {
+    ggplot2::ggsave(filename = paste0(saveDir,'/','loadings.pdf'),
+                    plot = p,
+                    width = 3,
+                    height =3)
+  }
+  return(p)
+}
