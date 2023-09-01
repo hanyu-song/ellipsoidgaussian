@@ -60,7 +60,9 @@ We call this distribution the Ellipsoid-Gaussian (EG).
 }
 \examples{
 \dontshow{if (reticulate::py_module_available('ctef')) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-  res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 100)
+\dontrun{
+  res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 1000)
+  }
 \dontshow{\}) # examplesIf}
 }
 \references{
