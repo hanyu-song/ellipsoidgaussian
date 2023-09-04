@@ -23,6 +23,8 @@ and column-based matching to resolve sign and label switching; see the help page
 \code{\link[infinitefactor:jointRot]{infinitefactor::jointRot()}} for more details.
 }
 \examples{
+\dontrun{
 aligned <- postprocess(shell, samples, burnin = 2500, num_samps = 5)
+}
 
 }

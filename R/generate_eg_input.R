@@ -215,10 +215,10 @@ fit_ellipsoid_r <- function(X, k) {
   # output: res(list): X_full (the centered data X-\bar X times the matrix of principal components V. So X = (X-\bar X)V.)
   # inv_len (inverse of axes length), center (center)
   # s(skew-symmetric matrix), R(Caley transform of s, an orthogonal matrix)
-  mod <- reticulate::import('ctef',delay_load = TRUE)
+#  mod <- reticulate::import('ctef',delay_load = TRUE)
   input <- as.matrix(X)
-  res <- mod$ctef$ctef(input,as.integer(k))
-  vmf_pars <- mod$ctef$vmf_mle(input, res$Lambda_inv, res$center)
+  res <- ctef$ctef$ctef(input,as.integer(k))
+  vmf_pars <- ctef$ctef$vmf_mle(input, res$Lambda_inv, res$center)
   res$ax_lengths <- 1 / res$result$x[1:k]
   res$mu <- vmf_pars[[1]]
   res$tau <- vmf_pars[[2]]

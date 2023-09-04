@@ -233,7 +233,9 @@ dFB_cpp_log <- function(X,para1, para2, fb_const_part) {
 #' DOI: 10.1198/jcgs.2009.07177
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @examples
+#' \dontrun{
 #' lat_facs <- draw_latent_factors(shell, samples, burnin = 2500, num_samp = 5)
+#' }
 #'
 draw_latent_factors <- function(dat, samples, burnin = NULL, num_samp = 200) {
   #  res <- matrix(NA, 1000, nrow(dat))
@@ -315,7 +317,9 @@ joint_rot_samples <- function(lambda_samps, lat_facs, iterations) {
 #' @param num_samps Number of samples for each latent factor
 #' @export
 #' @examples
+#' \dontrun{
 #' aligned <- postprocess(shell, samples, burnin = 2500, num_samps = 5)
+#' }
 #'
 postprocess <- function(dat, samples, burnin = NULL, num_samps = 200) {
   lat_facs <- draw_latent_factors(dat, samples, burnin, num_samp = num_samps)

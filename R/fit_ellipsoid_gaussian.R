@@ -39,8 +39,12 @@
 #' 3009–3017.
 #'
 #' @export
-#' @examplesIf reticulate::py_module_available('ctef')
-#'   res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 100)
+#' @examples
+#' \dontrun{
+#' if (reticulate::py_module_available('ctef')) {
+#' res <- ellipsoid_gaussian(shell, 3, FALSE, TRUE, 1000)
+#' }
+#' }
 ellipsoid_gaussian <- function(dat,
                                k,
                                scale_col,
