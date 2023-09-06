@@ -209,6 +209,7 @@ init_CTEF <- function(dat,noise_var,k,ordered) {
 #'
 #' @examplesIf reticulate::py_module_available('ctef')
 #' fit_ellipsoid_r(shell, 3)
+#'
 fit_ellipsoid_r <- function(X, k) {
   # X: data (matrix)
   # k: projection to what dimension of space?

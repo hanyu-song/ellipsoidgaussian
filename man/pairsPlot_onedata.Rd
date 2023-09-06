@@ -4,10 +4,14 @@
 \alias{pairsPlot_onedata}
 \title{ggplot2 pairs plot with correlation information}
 \usage{
-pairsPlot_onedata(dat_new, rotate_x_text = FALSE)
+pairsPlot_onedata(dat_new, dir = NULL, name = NULL, rotate_x_text = FALSE)
 }
 \arguments{
 \item{dat_new}{A matrix of data.}
+
+\item{dir}{A string, a directory where the resulting image is saved.}
+
+\item{name}{A string, the name of the resulting image.}
 
 \item{rotate_x_text}{Logical, whether to rotate the texts on the x-axis or not.
 If so, they are positioned at a 60-degree angle.}

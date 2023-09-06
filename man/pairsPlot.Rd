@@ -4,13 +4,17 @@
 \alias{pairsPlot}
 \title{ggplot2 pairs plot with two data sets in juxtaposition}
 \usage{
-pairsPlot(dat_orig, dat_new)
+pairsPlot(dat_orig, dat_new, dir = NULL, name = NULL)
 }
 \arguments{
 \item{dat_orig}{A matrix of data, e.g. the original data set.}
 
 \item{dat_new}{A matrix of data, e.g. the data generated from the posterior
 predictive distribution.}
+
+\item{dir}{A string, a directory where the resulting image is saved.}
+
+\item{name}{A string, the name of the resulting image.}
 }
 \value{
 ggmatrix object from GGally, a matrix of plots

@@ -20,6 +20,8 @@
 #' x-axis in case of space constraint.
 #'
 #' @param dat_new A matrix of data.
+#' @param dir A string, a directory where the resulting image is saved.
+#' @param name A string, the name of the resulting image.
 #' @param rotate_x_text Logical, whether to rotate the texts on the x-axis or not.
 #' If so, they are positioned at a 60-degree angle.
 #' @returns ggmatrix object from GGally, a matrix of plots
@@ -29,13 +31,16 @@
 #' require('scales')) {
 #'   pairsPlot_onedata(shell)
 #'   }
-pairsPlot_onedata <- function(dat_new,  rotate_x_text = FALSE) {
+pairsPlot_onedata <- function(dat_new,
+                              dir = NULL,
+                              name = NULL,
+                              rotate_x_text = FALSE) {
   if (!requireNamespace("GGally", quietly = TRUE) ||
       !requireNamespace('ggplot2', quietly = TRUE) ||
-    #  !requireNamespace('dplyr', quietly = TRUE) ||
+
       !requireNamespace('scales', quietly = TRUE) ) {
     stop(
-      "Package \"GGally\", \"ggplot2\" and \"scales\"
+      "Package \"GGally\", \"ggplot2\",\"scales\"
       must be installed to use this function.",
       call. = FALSE
     )
@@ -63,7 +68,19 @@ pairsPlot_onedata <- function(dat_new,  rotate_x_text = FALSE) {
   if(rotate_x_text) {
     q <- q +  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 60))
   }
-
+  #  axis.ticks = element_blank())
+  if (!is.null(dir)) {
+    if (!requireNamespace('grDevices', quietly = TRUE)) {
+      stop(
+        "Package \"grDevices\"
+      must be installed to save the image.",
+        call. = FALSE
+      )
+    }
+    if(!dir.exists(dir)) {dir.create(dir)}
+    ggplot2::ggsave(plot = q, filename = paste0(dir,'/', name,'.pdf'), width = 4.4,
+           height = 4.4,device = grDevices::cairo_pdf)
+  }
   return(q)
 }
 
@@ -81,6 +98,8 @@ pairsPlot_onedata <- function(dat_new,  rotate_x_text = FALSE) {
 #' @param dat_orig A matrix of data, e.g. the original data set.
 #' @param dat_new A matrix of data, e.g. the data generated from the posterior
 #' predictive distribution.
+#' @param dir A string, a directory where the resulting image is saved.
+#' @param name A string, the name of the resulting image.
 #' @returns ggmatrix object from GGally, a matrix of plots
 #' @export
 #' @importFrom rlang .data
@@ -90,7 +109,7 @@ pairsPlot_onedata <- function(dat_new,  rotate_x_text = FALSE) {
 #' require('scales')) {
 #'  pairsPlot(shell, dat_new)
 #'   }
-pairsPlot <- function(dat_orig, dat_new) {
+pairsPlot <- function(dat_orig, dat_new, dir = NULL,name = NULL) {
   if (!requireNamespace("GGally", quietly = TRUE) ||
       !requireNamespace('ggplot2', quietly = TRUE) ||
     #  !requireNamespace('dplyr', quietly = TRUE) ||
@@ -125,7 +144,18 @@ pairsPlot <- function(dat_orig, dat_new) {
                 #  lower = list(continuous = wrap('points',size = 0.3,alpha = 0.5)),
               lower = list(continuous = myscatter),
                diag = list(continuous = mydensity, axisLabels='show'))
-
+  if (!is.null(dir)) {
+    if (!requireNamespace('grDevices', quietly = TRUE)) {
+      stop(
+        "Package \"grDevices\"
+      must be installed to save the image.",
+        call. = FALSE
+      )
+    }
+    if(!dir.exists(dir)) {dir.create(dir)}
+    ggplot2::ggsave(plot = q, filename = paste0(dir,'/', name,'.pdf'), width = 4.4,
+           height = 4.4,device = grDevices::cairo_pdf)
+  }
   return(q)
 }
 #
