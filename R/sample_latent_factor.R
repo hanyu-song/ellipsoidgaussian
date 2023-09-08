@@ -225,6 +225,8 @@ dFB_cpp_log <- function(X,para1, para2, fb_const_part) {
 #' @param samples A list of posterior samples, output of [ellipsoid_gaussian()].
 #' @param burnin Number of burn-in samples.
 #' @param num_samp Number of samples for each latent factor.
+#' @param dir2Save A string, the path to where the sampled latent factors should
+#' be saved. Default is NULL, which means the latent factors are not saved.
 #' @export
 #' @references
 #' Peter D. Hoff (2009) Simulation of the Matrix Bingham–von Mises–Fisher
@@ -237,7 +239,8 @@ dFB_cpp_log <- function(X,para1, para2, fb_const_part) {
 #' lat_facs <- draw_latent_factors(shell, samples, burnin = 2500, num_samp = 5)
 #' }
 #'
-draw_latent_factors <- function(dat, samples, burnin = NULL, num_samp = 200) {
+draw_latent_factors <- function(dat, samples, burnin = NULL, num_samp = 200,
+                                dir2Save = NULL) {
   #  res <- matrix(NA, 1000, nrow(dat))
 
   if (is.null(burnin)) {
@@ -265,8 +268,11 @@ draw_latent_factors <- function(dat, samples, burnin = NULL, num_samp = 200) {
     utils::setTxtProgressBar(progress_bar, value = i)
   }
   close(progress_bar)
-
-  return(list(lat_facs = lat_facs, iterations = iterations))
+  res <- list(lat_facs = lat_facs, iterations = iterations)
+  if (!is.null(dir2Save)) {
+    save(res, file = paste0(dir2Save,'/','latent_factors.RData'))
+  }
+  return(res)
 }
 
 #' Resolve rotational ambiguity in samples of factor loadings and factors jointly
@@ -314,15 +320,22 @@ joint_rot_samples <- function(lambda_samps, lat_facs, iterations) {
 #' @param samples A list of samples from the posterior distribution, output of
 #' [ellipsoid_gaussian()].
 #' @param burnin Number of burn-in samples.
-#' @param num_samps Number of samples for each latent factor
+#' @param num_samps Number of samples for each latent factor.
+#' @param dir2Save A string, the path to where the latent factors and processed
+#' samples are saved.
 #' @export
 #' @examples
 #' \dontrun{
 #' aligned <- postprocess(shell, samples, burnin = 2500, num_samps = 5)
 #' }
 #'
-postprocess <- function(dat, samples, burnin = NULL, num_samps = 200) {
-  lat_facs <- draw_latent_factors(dat, samples, burnin, num_samp = num_samps)
-  res <- joint_rot_samples(samples$lambda, lat_facs$lat_facs, lat_facs$iterations)
-  return(res)
+postprocess <- function(dat, samples, burnin = NULL, num_samps = 200,
+                        dir2Save = NULL) {
+  lat_facs <- draw_latent_factors(dat, samples, burnin, num_samp = num_samps,
+                                  dir2Save = dir2Save)
+  processed <- joint_rot_samples(samples$lambda, lat_facs$lat_facs, lat_facs$iterations)
+  if (!is.null(dir2Save)) {
+    save(processed, file = paste0(dir2Save, '/', 'post_processed_samples.RData'))
+  }
+  return(processed)
 }

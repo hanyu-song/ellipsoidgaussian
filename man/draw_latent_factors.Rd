@@ -4,7 +4,13 @@
 \alias{draw_latent_factors}
 \title{Sample latent factors}
 \usage{
-draw_latent_factors(dat, samples, burnin = NULL, num_samp = 200)
+draw_latent_factors(
+  dat,
+  samples,
+  burnin = NULL,
+  num_samp = 200,
+  dir2Save = NULL
+)
 }
 \arguments{
 \item{dat}{A matrix of data, n by p.}
@@ -14,6 +20,9 @@ draw_latent_factors(dat, samples, burnin = NULL, num_samp = 200)
 \item{burnin}{Number of burn-in samples.}
 
 \item{num_samp}{Number of samples for each latent factor.}
+
+\item{dir2Save}{A string, the path to where the sampled latent factors should
+be saved. Default is NULL, which means the latent factors are not saved.}
 }
 \description{
 \code{draw_latent_factors} simulates \eqn{\min(500,

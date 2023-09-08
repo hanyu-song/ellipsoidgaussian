@@ -4,7 +4,7 @@
 \alias{postprocess}
 \title{Post-process the factor loadings}
 \usage{
-postprocess(dat, samples, burnin = NULL, num_samps = 200)
+postprocess(dat, samples, burnin = NULL, num_samps = 200, dir2Save = NULL)
 }
 \arguments{
 \item{dat}{A matrix of data, n by p.}
@@ -14,7 +14,10 @@ postprocess(dat, samples, burnin = NULL, num_samps = 200)
 
 \item{burnin}{Number of burn-in samples.}
 
-\item{num_samps}{Number of samples for each latent factor}
+\item{num_samps}{Number of samples for each latent factor.}
+
+\item{dir2Save}{A string, the path to where the latent factors and processed
+samples are saved.}
 }
 \description{
 \code{postprocess} post process the samples of the factor loadings to resolve
