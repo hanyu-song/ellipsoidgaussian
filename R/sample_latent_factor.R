@@ -333,7 +333,8 @@ postprocess <- function(dat, samples, burnin = NULL, num_samps = 200,
                         dir2Save = NULL) {
   lat_facs <- draw_latent_factors(dat, samples, burnin, num_samp = num_samps,
                                   dir2Save = dir2Save)
-  processed <- joint_rot_samples(samples$lambda, lat_facs$lat_facs, lat_facs$iterations)
+  processed <- joint_rot_samples(samples$lambda, lat_facs$lat_facs,
+                                 lat_facs$iterations)
   if (!is.null(dir2Save)) {
     save(processed, file = paste0(dir2Save, '/', 'post_processed_samples.RData'))
   }

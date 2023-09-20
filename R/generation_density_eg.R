@@ -102,7 +102,7 @@ calclogC_up2const <- function(tau, k, logged) {
 #' Log density up to a constant
 #'
 #' @description
-#' `calcMargDatallh_cpp2` calculates the log-likelihood under an ellipsoid-Gaussian
+#' `dellipsoidgaussian_up2const_logged` calculates the log-likelihood under an ellipsoid-Gaussian
 #' distribution up to a constant.
 #'
 #' @param dat Data in a matrix format (no. observations x no. dimensions p).

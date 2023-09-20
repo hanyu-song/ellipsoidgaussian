@@ -51,3 +51,4 @@ importFrom(utils,txtProgressBar)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp)
 useDynLib(ellipsoidgaussian, .registration = TRUE)
+

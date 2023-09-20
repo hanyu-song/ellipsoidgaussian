@@ -23,7 +23,7 @@ dellipsoidgaussian_up2const_logged(dat, Sigma, lambda, tau, mu, center)
 The log-likelihood of the data up to constant.
 }
 \description{
-\code{calcMargDatallh_cpp2} calculates the log-likelihood under an ellipsoid-Gaussian
+\code{dellipsoidgaussian_up2const_logged} calculates the log-likelihood under an ellipsoid-Gaussian
 distribution up to a constant.
 }
 \examples{
