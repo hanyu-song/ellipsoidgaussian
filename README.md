@@ -49,7 +49,7 @@ installed in the path as the Python used in R; run
 reticulate::py_config()
 ```
 
-to see the path to Python.
+to see the path to Python. Unfortunately, there is an issue with the Python module, specifically empty __init__.py file and I've contacted the author for an udpate.
 
 ## Example
 
